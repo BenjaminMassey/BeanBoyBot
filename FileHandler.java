@@ -11,29 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.nio.file.StandardCopyOption;
+import java.util.Vector;
 
 public class FileHandler {
-	
-	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
-	// https://github.com/BenjaminMassey/BeanBoyBot
-	
 	// Interacts with text files in terms of reading, writing and other general file stuff
-	
-	private static String nl = System.getProperty("line.separator");
-	
-	public static void checkForFilesAndCreateIfNone() throws IOException{
-		File quotesFile = new File("Quotes.txt");
-		if(!quotesFile.exists())
-			quotesFile.createNewFile();
-		File gameFile = new File("SplitGame.txt");
-		if(!gameFile.exists())
-			gameFile.createNewFile();
-		File accountsFile = new File("Accounts.txt");
-		if(!accountsFile.exists())
-			accountsFile.createNewFile();
-			
-	}
 	
 	public static void appendToFile(String fileName, String message) {
 		// Write a given message to a text file with given fileName
@@ -47,6 +28,72 @@ public class FileHandler {
 		}
 		catch(Exception e) {System.err.println("Oops: " + e);}
 	}
+	
+	public static void saveAll(String fileName, Vector<PointsGameHandler.Player> players)
+	{
+		
+		try {
+			File file = new File(fileName + ".txt");
+			FileWriter fw = new FileWriter(file, false);
+			for(int i = 0 ; i < players.size(); i++)
+			{
+				fw.write(players.elementAt(i).name + ":" + players.elementAt(i).points + ":"  + players.elementAt(i).state + ":" + players.elementAt(i).investment + System.getProperty("line.separator"));
+			}
+			
+			fw.flush();
+			fw.close();
+		}
+		catch (Exception e)
+		{
+			
+		}
+		
+	}
+	
+	public static Vector<PointsGameHandler.Player> loadAll(String fileName)
+	{
+		
+		Vector<PointsGameHandler.Player> players = new Vector<PointsGameHandler.Player>(); 
+		
+		try {
+			File file = new File(fileName + ".txt");
+			
+			if(!file.exists())
+				return null;
+			
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			
+			while(br.ready())
+			{
+				String line = br.readLine();
+				
+				PointsGameHandler.Player p = new PointsGameHandler.Player();
+				
+				p.name = line.split(":")[0];
+				
+				p.points = Integer.parseInt(line.split(":")[1]);
+				
+				p.state = Integer.parseInt(line.split(":")[2]);
+				
+				p.investment = Integer.parseInt(line.split(":")[3]);
+				
+				players.add(p);
+			}
+			
+			br.close();
+			fr.close();
+			return players;
+			
+		}
+		catch (Exception e)
+		{
+			
+		}
+		return null;
+	}
+	
+	
 	
 	public static String readFromFile(String fileName, int lineNum) {
 		// Read a given lineNum of a given fileName
@@ -89,7 +136,7 @@ public class FileHandler {
 				if (currentLineIndex != lineNum) {
 					content += currentLine;
 					if (currentLineIndex != fileLength)
-						content += nl;
+						content += System.getProperty("line.separator");
 				}
 				currentLineIndex++;
 			}

@@ -1,82 +1,139 @@
 package bbb;
 
+import java.util.Vector;
+
 public class PointsGameHandler {
 	
-	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
-	// https://github.com/BenjaminMassey/BeanBoyBot
+	public static class Player
+	{
+		public String name;
+		public int points;
+		public int state; // 0 - not invested, 1 - invested, 2 - waiting to sell
+		public int investment; // amount invested
+		
+	}
 	
-	private static String nl = System.getProperty("line.separator");
+	private static Vector<Player> players;
 	
-	public static boolean addPlayer(String name) {
-		boolean newPlayer = true;
-		int playerNum = FileHandler.getFileLength("SplitGame");
-		for (int i = 0; i < playerNum; i++) {
-			System.out.println(i + ": " + FileHandler.readFromFile("SplitGame", i).split(":")[0] + ", " + name);
-			if (FileHandler.readFromFile("SplitGame", i).split(":")[0].equals(name))
-				newPlayer = false;
+	public static void Initialize()
+	{
+		System.out.println("Constructor, attempting to load file");
+		players = FileHandler.loadAll("SplitGame");
+		
+		if(players == null)
+		{
+			System.out.println("no file found, creating one");
+			players = new Vector<Player>();
+			
+			FileHandler.saveAll("SplitGame", players);
 		}
-		if(newPlayer) {
-			FileHandler.appendToFile("SplitGame", name + ":100:false" + nl);
+		
+		
+	}
+	
+	public static boolean addPlayer(String newName) {
+		boolean newPlayer = true;
+		//int playerNum = FileHandler.getFileLength("SplitGame");
+		
+		if(players != null)
+		{
+		
+			for(int i = 0; i < players.size(); i++)
+			{
+				if(players.elementAt(i).name.equals(newName))
+				{
+					newPlayer = false;
+					break;
+				}
+			}
+		}
+		
+		
+		if(newPlayer) 
+		{
+			Player p = new Player();
+			
+			p.name = newName;
+			p.points = 100;
+			p.state = 0;
+			p.investment = 0;
+			
+			players.add(p);
+			
+			//FileHandler.appendToFile("SplitGame", p.name + ":" + p.points + ":" + p.state + ":" + p.investment + System.getProperty("line.separator") );
+			FileHandler.saveAll("SplitGame", players);
 			return true;
 		}
 		else
 			return false;
 	}
 	
-	public static int getPoints(String name) {
-		try {
-			int lineNum = fetchPlayerLineNum(name);
-			return Integer.parseInt(FileHandler.readFromFile("SplitGame", lineNum).split(":")[1]);
-		}catch(Exception e) {
-			return 0;
+	public static int getPoints(String newName) {
+
+		for(int i = 0; i < players.size(); i++)
+		{
+			if(players.elementAt(i).name.equals(newName))
+			{
+				return players.elementAt(i).points;
+			}
 		}
+		
+		return 0;
 	}
 	
-	public static boolean buyRun(String name) {
-		int originalLine = fetchPlayerLineNum(name);
-		String[] playerInfo = FileHandler.readFromFile("SplitGame", originalLine).split(":");
-		if(playerInfo.length != 3)
-			return false;
-		if(playerInfo[2].equals("true"))
-			return false;
-		playerInfo[1] = String.valueOf((int) (Integer.parseInt(playerInfo[1]) - SplitGame.getCost()));
-		playerInfo[2] = "true";
-		FileHandler.deleteLineFromFile("SplitGame", originalLine);
-		FileHandler.appendToFile("SplitGame", playerInfo[0] + ":" + playerInfo[1] + ":" + playerInfo[2] + nl);
-		return true;
+	public static boolean buyRun(String newName) {
+		
+		for(int i = 0; i < players.size(); i++)
+		{
+			if(players.elementAt(i).name.equals(newName))
+			{
+				if(players.elementAt(i).points - SplitGame.getCost() > 0 && players.elementAt(i).state == 0)
+				{
+					players.elementAt(i).points -= SplitGame.getCost();
+					players.elementAt(i).state = 1;
+					players.elementAt(i).investment = SplitGame.getCost(); 
+					FileHandler.saveAll("SplitGame", players);
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
-	public static boolean sellRun(String name) {
-		int originalLine = fetchPlayerLineNum(name);
-		String[] playerInfo = FileHandler.readFromFile("SplitGame", originalLine).split(":");
-		if(playerInfo.length != 3)
-			return false;
-		if(playerInfo[2].equals("false"))
-			return false;
-		playerInfo[1] = String.valueOf((int) (Double.parseDouble(playerInfo[1]) + SplitGame.getCost()));
-		playerInfo[2] = "false";
-		FileHandler.deleteLineFromFile("SplitGame", originalLine);
-		FileHandler.appendToFile("SplitGame", playerInfo[0] + ":" + playerInfo[1] + ":" + playerInfo[2] + nl);
-		return true;
+	public static boolean sellRun(String newName) {
+		
+		for(int i = 0; i < players.size(); i++)
+		{
+			if(players.elementAt(i).name.equals(newName))
+			{
+				if(players.elementAt(i).state == 1)
+				{
+					// Right now just going to make it sell immediately, when we do delayed selling it will be set state = 2
+					players.elementAt(i).points += SplitGame.getCost();
+					players.elementAt(i).state = 0;
+					players.elementAt(i).investment = 0;
+					
+					FileHandler.saveAll("SplitGame", players);
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	public static void sellAll() {
-		int numPlayers = FileHandler.getFileLength("SplitGame");
-		for(int i = 0; i < numPlayers; i++) {
-			String[] playerInfo = FileHandler.readFromFile("SplitGame", 0).split(":");
-			sellRun(playerInfo[0]);
+		
+		for(int i = 0; i < players.size(); i++)
+		{
+			players.elementAt(i).points += SplitGame.getCost();
+			players.elementAt(i).state = 0;
+			players.elementAt(i).investment = 0;
 		}
+		
+		FileHandler.saveAll("SplitGame", players);
 	}
 	
-	public static int fetchPlayerLineNum(String name) {
-		int playerNum = FileHandler.getFileLength("SplitGame");
-		int lineNum = 0;
-		for (int i = 0; i < playerNum; i++) {
-			if (FileHandler.readFromFile("SplitGame", i).split(":")[0].equals(name))
-				lineNum = i;
-		}
-		return lineNum;
-	}
-	
+
 }
