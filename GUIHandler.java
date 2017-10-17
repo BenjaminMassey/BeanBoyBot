@@ -34,9 +34,8 @@ public class GUIHandler extends JFrame {
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
         
         JTextField chatChannel = new JTextField(20);
-        try {
+        if(!AccountsManager.getChatChannel().substring(1).equals("ailed D:"))
         	chatChannel.setText(AccountsManager.getChatChannel().substring(1));
-        }catch(Exception e) {}
         jp.add(chatChannel);
         JButton channelButton = new JButton("Set Chat Channel");
         jp.add(channelButton);
@@ -46,9 +45,8 @@ public class GUIHandler extends JFrame {
         	}
         });
         JTextField botName = new JTextField(20);
-        try {
+        if(!AccountsManager.getBotName().equals("Failed D:"))
         	botName.setText(AccountsManager.getBotName());
-        }catch(Exception e) {}
         jp.add(botName);
         JButton botNameButton = new JButton("Set Bot Name");
         jp.add(botNameButton);
@@ -58,10 +56,8 @@ public class GUIHandler extends JFrame {
         	}
         });
         JTextField botOauth = new JTextField(20);
-        try {
-        	AccountsManager.getBotOauth();
+        if(!AccountsManager.getBotOauth().equals("Failed D:"))
         	botOauth.setText("****************");
-        }catch(Exception e) {}
         jp.add(botOauth);
         JButton botOauthButton = new JButton("Set Bot Oauth");
         jp.add(botOauthButton);

@@ -43,7 +43,7 @@ public class PointsGameHandler {
 		playerInfo[1] = String.valueOf((int) (Integer.parseInt(playerInfo[1]) - SplitGame.getCost()));
 		playerInfo[2] = "true";
 		FileHandler.deleteLineFromFile("SplitGame", originalLine);
-		FileHandler.appendToFile("SplitGame", nl + playerInfo[0] + ":" + playerInfo[1] + ":" + playerInfo[2] + nl);
+		FileHandler.appendToFile("SplitGame", playerInfo[0] + ":" + playerInfo[1] + ":" + playerInfo[2] + nl);
 		return true;
 	}
 	
@@ -57,7 +57,7 @@ public class PointsGameHandler {
 		playerInfo[1] = String.valueOf((int) (Double.parseDouble(playerInfo[1]) + SplitGame.getCost()));
 		playerInfo[2] = "false";
 		FileHandler.deleteLineFromFile("SplitGame", originalLine);
-		FileHandler.appendToFile("SplitGame", nl + playerInfo[0] + ":" + playerInfo[1] + ":" + playerInfo[2] + nl);
+		FileHandler.appendToFile("SplitGame", playerInfo[0] + ":" + playerInfo[1] + ":" + playerInfo[2] + nl);
 		return true;
 	}
 	

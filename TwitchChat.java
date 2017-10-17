@@ -71,9 +71,7 @@ public class TwitchChat extends PircBot {
 						"into the game, !buy to buy a run, !sell to sell a run and " +
 						"!points to see your points. A PB will give 50% extra points, " +
 						"but a reset will only give you 75% of the current cost. I'm still an early version, so " +
-						"sorry if something doesn't work or if the game isn't very balanced. " +
-						"Feel free to give feedback in chat, and Bean will do his best to " +
-						"improve it. Have fun!");
+						"sorry if something doesn't work. Have fun!");
 		}
 		
 		if(message.startsWith("!points"))
@@ -91,7 +89,7 @@ public class TwitchChat extends PircBot {
 			boolean bought = PointsGameHandler.buyRun(sender);
 			if(bought)
 				messageChat("Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost() + 
-							" points. You now have " + PointsGameHandler.getPoints(sender) + "points.");
+							" points. You now have " + PointsGameHandler.getPoints(sender) + " points.");
 			else
 				messageChat("Sorry, " + sender + ", but failed to buy... D:");
 		}
@@ -100,7 +98,7 @@ public class TwitchChat extends PircBot {
 			boolean sold = PointsGameHandler.sellRun(sender);
 			if(sold)
 				messageChat("Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost() + 
-							" points. You now have " + PointsGameHandler.getPoints(sender) + "points.");
+							" points. You now have " + PointsGameHandler.getPoints(sender) + " points.");
 			else
 				messageChat("Sorry, " + sender + ", but failed to sell... D:");
 		}
