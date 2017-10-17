@@ -1,11 +1,6 @@
 package bbb;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 
 public class Program {
 	// A part of BeanBoyBot
@@ -16,8 +11,9 @@ public class Program {
 	
 	public static void main(String[] args) throws IOException {
 		FileHandler.checkForFilesAndCreateIfNone();
+		PlayersHandler.initialize();
 		AccountsManager.updateAll();
-		GUIHandler.createWindow("Twitch Bot", "Bean.png");
+		GUIHandler.createWindow("Twitch Bot", "Bean.png"); // Start button on GUI handles other start ups
 	}
 	
 }

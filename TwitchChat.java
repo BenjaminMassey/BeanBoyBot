@@ -78,7 +78,7 @@ public class TwitchChat extends PircBot {
 			messageChat(sender + " has " + PointsGameHandler.getPoints(sender) + " points.");
 		
 		if(message.startsWith("!join")) {
-			boolean joined = PointsGameHandler.addPlayer(sender);
+			boolean joined = PlayersHandler.addPlayer(sender);
 			if(joined)
 				messageChat("Thanks for joining, " + sender + "! You start with 100 points.");
 			else

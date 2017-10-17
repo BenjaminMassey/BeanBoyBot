@@ -3,8 +3,6 @@ package bbb;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.SwingConstants;
-
 public class SplitGame extends TimerTask{
 	
 	// A part of BeanBoyBot
@@ -31,7 +29,7 @@ public class SplitGame extends TimerTask{
 		updateBPT();
 		updateCT();
 		updatePD();
-		updateD();
+		//updateD(); BROKEN
 		generateValue();
 		if(checkReset()) {
 			cost = (int) Math.round(cost * 0.75);
@@ -46,6 +44,7 @@ public class SplitGame extends TimerTask{
 		setCost();
 		updatePB();
 		GUIHandler.cost.setText("Cost: " + Long.toString(cost));
+		//print();
 	}
 	
 	public static void start() {
@@ -107,11 +106,11 @@ public class SplitGame extends TimerTask{
 	private static void updatePD() {
 		pd = ct / bpt;
 	}
-	
+	/* THIS METHOD IS GETTING A STRANGE RESULT THAT IS CAUSING ISSUES
 	private static void updateD() {
 		d = stringTimeToSeconds(LiveSplitHandler.getDelta());
 	}
-	
+	*/
 	private static void updatePB() {
 		pb = stringTimeToSeconds(LiveSplitHandler.getFinalTime());
 	}

@@ -27,10 +27,8 @@ public class GUIHandler extends JFrame {
 	
 	public GUIHandler(String name) {
         super(name);
-        //setResizable(false);
         JPanel jp = new JPanel();
         jp.setLayout(new GridLayout(9,1));
-        //jp.setSize(1000, 1000);
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
         
         JTextField chatChannel = new JTextField(20);
@@ -77,6 +75,7 @@ public class GUIHandler extends JFrame {
         		if(TwitchChat.connected) {
         			try{
         				TwitchChat.deactivate();
+        				PlayersHandler.saveAll();
         			}catch(Exception e) {
         				System.err.println("Oops: " + e);
         			}
