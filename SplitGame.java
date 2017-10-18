@@ -24,12 +24,15 @@ public class SplitGame extends TimerTask{
 	private static int cost; // How much a run will cost at the moment
 	private static Timer timer;
 	
+	private static int dividend;
+	private static double diviMultiplier;
+	
 	public void run() {
 		updateSplit();
 		updateBPT();
 		updateCT();
 		updatePD();
-		//updateD(); BROKEN
+		updateD();
 		generateValue();
 		if(checkReset()) {
 			cost = (int) Math.round(cost * 0.75);
@@ -50,6 +53,7 @@ public class SplitGame extends TimerTask{
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
+		diviMultiplier = 0;
 		TimerTask splitStocks = new SplitGame();
         timer = new Timer(true);
         timer.scheduleAtFixedRate(splitStocks, 0, 1000);
@@ -72,7 +76,21 @@ public class SplitGame extends TimerTask{
 	}
 	
 	private static void updateSplit() {
-		split = Integer.parseInt(LiveSplitHandler.getSplitIndex());
+		int newSplit = Integer.parseInt(LiveSplitHandler.getSplitIndex());
+	
+		if(split != newSplit) // Split just changed to a new split, check delta to see if it pays dividends
+		{
+			if((int)(Math.abs(d) * diviMultiplier) > 0) // +0.0 or -0.0 probably fails
+			{
+				dividend = (int)(Math.abs(d) * diviMultiplier);
+				
+				TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to all investors!");
+				
+				PointsGameHandler.addBonusPoints(dividend);
+			}
+		}
+		
+		split = newSplit;
 	}
 	
 	private static boolean checkReset() {
@@ -89,8 +107,10 @@ public class SplitGame extends TimerTask{
 	
 	private static boolean checkPB() {
 		double finalTime = stringTimeToSeconds(LiveSplitHandler.getFinalTime());
-		if(finalTime < pb)
+		if(finalTime < pb && ct == finalTime) {
+			pb = finalTime;
 			return true;
+		}
 		else
 			return false;
 	}
@@ -106,11 +126,26 @@ public class SplitGame extends TimerTask{
 	private static void updatePD() {
 		pd = ct / bpt;
 	}
-	/* THIS METHOD IS GETTING A STRANGE RESULT THAT IS CAUSING ISSUES
+	
 	private static void updateD() {
-		d = stringTimeToSeconds(LiveSplitHandler.getDelta());
+		// Have to handle some weird stuff here
+		if(LiveSplitHandler.getCurrentTimerPhase().equals("Running"))
+		{
+		
+			String buffer = LiveSplitHandler.getDelta();
+			
+			if(buffer.contains("−"))
+			{
+				buffer = buffer.replaceAll("−", "-");
+			}
+			
+			//System.out.println("Delta: " + buffer); // for Debugging
+			
+			d = stringTimeToSeconds(buffer);
+			
+			//System.out.println("Delta Num: " + d);
+		}
 	}
-	*/
 	private static void updatePB() {
 		pb = stringTimeToSeconds(LiveSplitHandler.getFinalTime());
 	}

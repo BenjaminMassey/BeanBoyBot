@@ -10,21 +10,6 @@ public class PointsGameHandler {
 	// Copyright 2017 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 	
-	public static int getPoints(String newName) {
-		
-		ArrayList<Player> players = PlayersHandler.getPlayers();
-		
-		for(int i = 0; i < players.size(); i++)
-		{
-			if(players.get(i).name.equals(newName))
-			{
-				return players.get(i).points;
-			}
-		}
-		
-		return 0;
-	}
-	
 	public static boolean buyRun(String newName) {
 		
 		ArrayList<Player> players = PlayersHandler.getPlayers();
@@ -82,6 +67,13 @@ public class PointsGameHandler {
 			players.get(i).investment = 0;
 		}
 		
+		PlayersHandler.saveAll();
+	}
+	
+	public static void addBonusPoints(int bonus) {
+		
+		PlayersHandler.addPointsAll(bonus);
+
 		PlayersHandler.saveAll();
 	}
 	

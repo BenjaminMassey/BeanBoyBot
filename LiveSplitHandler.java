@@ -95,6 +95,20 @@ public class LiveSplitHandler {
 		return receive("getfinaltime");
 	}
 	
+	public static String getLastSplitTime(){
+		// Get the last split time
+		
+		return receive("getlastsplittime");
+	}
+	
+	public static String getComparisonSplitTime() {
+		return receive("getcomparisonsplittime");
+	}
+	
+	public static String getCurrentTimerPhase() {
+		return receive("getcurrenttimerphase");
+	}
+	
 	public static void split() {
 		// Input a split
 		

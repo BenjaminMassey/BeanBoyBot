@@ -75,7 +75,7 @@ public class TwitchChat extends PircBot {
 		}
 		
 		if(message.startsWith("!points"))
-			messageChat(sender + " has " + PointsGameHandler.getPoints(sender) + " points.");
+			messageChat(sender + " has " + PlayersHandler.getPoints(sender) + " points.");
 		
 		if(message.startsWith("!join")) {
 			boolean joined = PlayersHandler.addPlayer(sender);
@@ -89,7 +89,7 @@ public class TwitchChat extends PircBot {
 			boolean bought = PointsGameHandler.buyRun(sender);
 			if(bought)
 				messageChat("Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost() + 
-							" points. You now have " + PointsGameHandler.getPoints(sender) + " points.");
+							" points. You now have " + PlayersHandler.getPoints(sender) + " points.");
 			else
 				messageChat("Sorry, " + sender + ", but failed to buy... D:");
 		}
@@ -98,7 +98,7 @@ public class TwitchChat extends PircBot {
 			boolean sold = PointsGameHandler.sellRun(sender);
 			if(sold)
 				messageChat("Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost() + 
-							" points. You now have " + PointsGameHandler.getPoints(sender) + " points.");
+							" points. You now have " + PlayersHandler.getPoints(sender) + " points.");
 			else
 				messageChat("Sorry, " + sender + ", but failed to sell... D:");
 		}
