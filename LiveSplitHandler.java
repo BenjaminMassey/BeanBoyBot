@@ -77,6 +77,13 @@ public class LiveSplitHandler {
 		return receive("getdelta");
 	}
 	
+	public static String getDeltaComparison() {
+		// Get the current delta with current comparison
+		
+		return receive("getdelta COMPARISON");
+	}
+	
+	
 	public static String getSplitIndex() {
 		// Get which split you're on
 		
@@ -93,6 +100,20 @@ public class LiveSplitHandler {
 		// Get the final time
 		
 		return receive("getfinaltime");
+	}
+	
+	public static String getLastSplitTime(){
+		// Get the last split time
+		
+		return receive("getlastsplittime");
+	}
+	
+	public static String getComparisonSplitTime() {
+		return receive("getcomparisonsplittime");
+	}
+	
+	public static String getCurrentTimerPhase() {
+		return receive("getcurrenttimerphase");
 	}
 	
 	public static void split() {

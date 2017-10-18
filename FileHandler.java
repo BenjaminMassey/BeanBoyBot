@@ -29,15 +29,15 @@ public class FileHandler {
 		catch(Exception e) {System.err.println("Oops: " + e);}
 	}
 	
-	public static void saveAll(String fileName, Vector<PointsGameHandler.Player> players)
+	public static void saveAll(String fileName)
 	{
 		
 		try {
 			File file = new File(fileName + ".txt");
 			FileWriter fw = new FileWriter(file, false);
-			for(int i = 0 ; i < players.size(); i++)
+			for(int i = 0 ; i < PlayersHandler.getSize(); i++)
 			{
-				fw.write(players.elementAt(i).name + ":" + players.elementAt(i).points + ":"  + players.elementAt(i).state + ":" + players.elementAt(i).investment + System.getProperty("line.separator"));
+				fw.write(PlayersHandler.getNameAt(i) + ":" + PlayersHandler.getPointsAt(i) + ":"  + PlayersHandler.getStateAt(i) + ":" + PlayersHandler.getInvestmentAt(i) + System.getProperty("line.separator"));
 			}
 			
 			fw.flush();
@@ -50,16 +50,14 @@ public class FileHandler {
 		
 	}
 	
-	public static Vector<PointsGameHandler.Player> loadAll(String fileName)
+
+	public static boolean loadAll(String fileName)
 	{
-		
-		Vector<PointsGameHandler.Player> players = new Vector<PointsGameHandler.Player>(); 
-		
 		try {
 			File file = new File(fileName + ".txt");
 			
 			if(!file.exists())
-				return null;
+				return false;
 			
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
@@ -68,31 +66,35 @@ public class FileHandler {
 			{
 				String line = br.readLine();
 				
-				PointsGameHandler.Player p = new PointsGameHandler.Player();
+				String name;
+				int points, state, investment;
 				
-				p.name = line.split(":")[0];
 				
-				p.points = Integer.parseInt(line.split(":")[1]);
+				name = line.split(":")[0];
 				
-				p.state = Integer.parseInt(line.split(":")[2]);
+				points = Integer.parseInt(line.split(":")[1]);
 				
-				p.investment = Integer.parseInt(line.split(":")[3]);
+				state = Integer.parseInt(line.split(":")[2]);
 				
-				players.add(p);
+				investment = Integer.parseInt(line.split(":")[3]);
+
+				
+				PlayersHandler.addPlayer(name,points,state,investment);
 			}
 			
 			br.close();
 			fr.close();
-			return players;
+			return  true;
 			
 		}
 		catch (Exception e)
 		{
 			
 		}
-		return null;
+		
+		
+		return false;
 	}
-	
 	
 	
 	public static String readFromFile(String fileName, int lineNum) {

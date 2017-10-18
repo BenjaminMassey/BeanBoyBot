@@ -26,34 +26,47 @@ public class SplitGame extends TimerTask{
 	private static int cost; // How much a run will cost at the moment
 	private static Timer timer;
 	
+	private static int dividend;
+	private static double diviMultiplier;
+	
 	public void run() {
+		
+		if(pb == -1)
+			updatePB(); // Only updates at start of run or on acquiring a new PB
+		
+		updateD(); // Fixed it ... hopefully
 		updateSplit();
 		updateBPT();
 		updateCT();
 		updatePD();
-		updateD();
+		
 		generateValue();
+		
+		System.out.println("Step: " + ct);
 		if(checkReset()) {
 			cost = (int) Math.round(cost * 0.75);
 			PointsGameHandler.sellAll();
 			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
 		}
-		if(checkPB()) {
+		else if(checkPB()) {
 			cost = (int) Math.round(cost * 1.5);
 			PointsGameHandler.sellAll();
 			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
 		}
 		setCost();
-		updatePB();
+		//updatePB();
 		GUIHandler.cost.setText("Cost: " + Long.toString(cost));
 	}
 	
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
+		diviMultiplier = 0.1;
 		TimerTask splitStocks = new SplitGame();
         timer = new Timer(true);
         timer.scheduleAtFixedRate(splitStocks, 0, 1000);
+        
+        
 	}
 	
 	public static void stop() {
@@ -73,7 +86,26 @@ public class SplitGame extends TimerTask{
 	}
 	
 	private static void updateSplit() {
-		split = Integer.parseInt(LiveSplitHandler.getSplitIndex());
+		String buffer = LiveSplitHandler.getSplitIndex();
+		
+		// System.out.println("Split: " + buffer); // For Debugging
+		
+		int newsplit = Integer.parseInt(buffer);
+		
+		if(split != newsplit) // Split just changed to a new split, check delta to see if it pays dividends
+		{
+			if((int)(Math.abs(d) * diviMultiplier) > 0)
+			{
+				dividend = (int)(Math.abs(d) * diviMultiplier);
+				
+				TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to all investors!");
+				
+				PointsGameHandler.addBonusPoints(dividend);
+			}
+		}
+		
+		split = newsplit;
+
 	}
 	
 	private static boolean checkReset() {
@@ -89,27 +121,70 @@ public class SplitGame extends TimerTask{
 	}
 	
 	private static boolean checkPB() {
-		double finalTime = stringTimeToSeconds(LiveSplitHandler.getFinalTime());
-		if(finalTime < pb)
+		
+		String buffer = LiveSplitHandler.getFinalTime();
+		
+		//System.out.println("Final Time: " + buffer); // For Debugging
+		
+		double finalTime = stringTimeToSeconds(buffer);
+
+		
+		System.out.println("Current Time: " + ct + " Final time: " + finalTime + " PB: " + pb);
+		
+		if(ct == finalTime && finalTime < pb)
+		{
+			System.out.println("PB ACHIEVED");
+			
+			pb = finalTime;
+			
 			return true;
+		}
 		else
 			return false;
 	}
 	
 	private static void updateBPT() {
-		bpt = stringTimeToSeconds(LiveSplitHandler.getBestPossibleTime());
+		
+		String buffer = LiveSplitHandler.getBestPossibleTime();
+		
+		//System.out.println("BPT: " + buffer); // For Debugging
+			
+		
+		bpt = stringTimeToSeconds(buffer);
 	}
 	
 	private static void updateCT() {
-		ct = stringTimeToSeconds(LiveSplitHandler.getCurrentTime());
+		String buffer = LiveSplitHandler.getCurrentTime();
+				
+		//System.out.println("CT: " + buffer); // For Debugging
+		
+		ct = stringTimeToSeconds(buffer);
 	}
 	
 	private static void updatePD() {
 		pd = ct / bpt;
 	}
 	
+	
 	private static void updateD() {
-		d = stringTimeToSeconds(LiveSplitHandler.getDelta());
+		
+		if(LiveSplitHandler.getCurrentTimerPhase().equals("Running"))
+		{
+		
+			String buffer = LiveSplitHandler.getDelta();
+			
+			if(buffer.contains("−"))
+			{
+				buffer = buffer.replaceAll("−", "-");
+			}
+			
+			//System.out.println("Delta: " + buffer); // for Debugging
+			
+			d = stringTimeToSeconds(buffer);
+			
+			//System.out.println("Delta Num: " + d);
+		}
+		
 	}
 	
 	private static void updatePB() {
