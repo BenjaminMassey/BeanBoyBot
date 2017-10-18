@@ -26,10 +26,8 @@ public class AccountsManager {
 		botOauth = FileHandler.readFromFile("Accounts", 2);
 	}
 	private static void write() {
-		while(FileHandler.getFileLength("Accounts") != 0) {
+		while(FileHandler.getFileLength("Accounts") != 0)
 			FileHandler.deleteLineFromFile("Accounts", 0);
-			System.out.println("AHHHHH");
-		}
 		FileHandler.appendToFile("Accounts", chatChannel + nl);
 		FileHandler.appendToFile("Accounts", botName + nl);
 		FileHandler.appendToFile("Accounts", botOauth);
@@ -43,7 +41,10 @@ public class AccountsManager {
 		write();
 	}
 	public static void setBotOauth(String oauth) {
-		botOauth = oauth;
+		if(oauth.startsWith("oauth:"))
+			botOauth = oauth;
+		else
+			botOauth = "oauth:" + oauth;
 		write();
 	}
 	public static String getChatChannel() {
