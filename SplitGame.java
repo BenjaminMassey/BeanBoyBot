@@ -3,30 +3,30 @@ package bbb;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SplitGame extends TimerTask{
-	
+public class SplitGame extends TimerTask {
+
 	// A part of BeanBoyBot
 	// Copyright 2017 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 
 	private static final double scoreMultiplier = 10;
-	
+
 	private static int split; // For splits, -1 means not started and then counts from 0
 	private static boolean reset; // Whether we have already paid out for the reset
-	
+
 	private static double bpt; // Best Possible Time in seconds
 	private static double ct; // Current Time in seconds
 	private static double pd; // Percent Done with the run in seconds
 	private static double d; // Delta in seconds
 	private static double pb; // Personal Best in seconds
 	private static double v; // The calculated value from 0 to 1 of the run
-	
+
 	private static int cost; // How much a run will cost at the moment
 	private static Timer timer;
-	
+
 	private static int dividend;
 	private static double diviMultiplier;
-	
+
 	public void run() {
 		updateSplit();
 		updateBPT();
@@ -34,12 +34,12 @@ public class SplitGame extends TimerTask{
 		updatePD();
 		updateD();
 		generateValue();
-		if(checkReset()) {
+		if (checkReset()) {
 			cost = (int) Math.round(cost * 0.75);
 			PointsGameHandler.sellAll();
 			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
 		}
-		if(checkPB()) {
+		if (checkPB()) {
 			cost = (int) Math.round(cost * 1.5);
 			PointsGameHandler.sellAll();
 			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
@@ -47,22 +47,22 @@ public class SplitGame extends TimerTask{
 		setCost();
 		updatePB();
 		GUIHandler.cost.setText("Cost: " + Long.toString(cost));
-		//print();
+		// print();
 	}
-	
+
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
-		diviMultiplier = 0;
+		diviMultiplier = 0; // 0 means disabled
 		TimerTask splitStocks = new SplitGame();
-        timer = new Timer(true);
-        timer.scheduleAtFixedRate(splitStocks, 0, 1000);
+		timer = new Timer(true);
+		timer.scheduleAtFixedRate(splitStocks, 0, 1000);
 	}
-	
+
 	public static void stop() {
 		timer.cancel();
 	}
-	
+
 	private static void print() {
 		System.out.println("bpt : " + bpt);
 		System.out.println("ct : " + ct);
@@ -74,107 +74,90 @@ public class SplitGame extends TimerTask{
 		System.out.println("split : " + split);
 		System.out.println("reset : " + reset);
 	}
-	
+
 	private static void updateSplit() {
 		int newSplit = Integer.parseInt(LiveSplitHandler.getSplitIndex());
-	
-		if(split != newSplit) // Split just changed to a new split, check delta to see if it pays dividends
-		{
-			if((int)(Math.abs(d) * diviMultiplier) > 0) // +0.0 or -0.0 probably fails
-			{
-				dividend = (int)(Math.abs(d) * diviMultiplier);
-				
+
+		if (split != newSplit) { // Split just changed to a new split, check delta to see if it pays dividends
+			if ((int) (Math.abs(d) * diviMultiplier) > 0) { // +0.0 or -0.0 probably fails
+				dividend = (int) (Math.abs(d) * diviMultiplier);
 				TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to all investors!");
-				
 				PointsGameHandler.addBonusPoints(dividend);
 			}
 		}
-		
+
 		split = newSplit;
 	}
-	
+
 	private static boolean checkReset() {
-		if(split == -1 && !reset) {
+		if (split == -1 && !reset) {
 			reset = true;
 			return true;
-		}
-		else {
+		} else {
 			if (split > -1)
 				reset = false;
 			return false;
 		}
 	}
-	
+
 	private static boolean checkPB() {
 		double finalTime = stringTimeToSeconds(LiveSplitHandler.getFinalTime());
-		if(finalTime < pb && ct == finalTime) {
+		if (finalTime < pb && ct == finalTime) {
 			pb = finalTime;
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
-	
+
 	private static void updateBPT() {
 		bpt = stringTimeToSeconds(LiveSplitHandler.getBestPossibleTime());
 	}
-	
+
 	private static void updateCT() {
 		ct = stringTimeToSeconds(LiveSplitHandler.getCurrentTime());
 	}
-	
+
 	private static void updatePD() {
 		pd = ct / bpt;
 	}
-	
+
 	private static void updateD() {
 		// Have to handle some weird stuff here
-		if(LiveSplitHandler.getCurrentTimerPhase().equals("Running"))
-		{
-		
+		if (LiveSplitHandler.getCurrentTimerPhase().equals("Running")) {
 			String buffer = LiveSplitHandler.getDelta();
-			
-			if(buffer.contains("−"))
-			{
+			if (buffer.contains("−"))
 				buffer = buffer.replaceAll("−", "-");
-			}
-			
-			//System.out.println("Delta: " + buffer); // for Debugging
-			
 			d = stringTimeToSeconds(buffer);
-			
-			//System.out.println("Delta Num: " + d);
 		}
 	}
+
 	private static void updatePB() {
 		pb = stringTimeToSeconds(LiveSplitHandler.getFinalTime());
 	}
-	
+
 	private static void generateValue() {
 		double value = 1; // Start out at maximum value, then will subtract
-		//double factor = (0.5 * ( (pb - ct)/pb ) + 0.5 * ( (pb - bpt) / pb ));
-		//double timeSaveFactor = d / (pb - bpt);
 		double timeSaveFactor = 1 - ((pb - bpt) / bpt);
 		double timeThroughFactor = 1 - pd;
-		
-		double factor = 1.75*timeSaveFactor + 0.25*timeThroughFactor; // max 2
+
+		double factor = 1.75 * timeSaveFactor + 0.25 * timeThroughFactor; // max 2
 		factor = Math.pow(factor, 4); // max 16
 		value = 16 - factor;
-		if(value > 16)
+		if (value > 16)
 			value = 16;
-		if(value < 0)
+		if (value < 0)
 			value = 0;
 		v = value;
 	}
-	
+
 	private static void setCost() {
-		cost =  (int) Math.round(v * scoreMultiplier);
+		cost = (int) Math.round(v * scoreMultiplier);
 	}
-	
+
 	public static int getCost() {
 		return cost;
 	}
-	
+
 	private static double stringTimeToSeconds(String givenTime) {
 		try {
 			String[] timeStrArray = givenTime.split(":"); // { minutes, seconds }
@@ -182,15 +165,13 @@ public class SplitGame extends TimerTask{
 			if (timeStrArray.length == 1) // X.XX
 				time = Double.parseDouble(timeStrArray[0]);
 			else if (timeStrArray.length == 2) { // XX:XX.XX
-				time = (Double.parseDouble(timeStrArray[0]) * 60) + 
-						Double.parseDouble(timeStrArray[1]);
-			}
-			else { // Probably nothing, maybe into hours
+				time = (Double.parseDouble(timeStrArray[0]) * 60) + Double.parseDouble(timeStrArray[1]);
+			} else { // Probably nothing, maybe into hours
 				time = 0;
 				System.err.println("DID NOT PARSE '" + givenTime + "' CORRECTLY");
 			}
 			return time;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return 0;
 		}
 	}
