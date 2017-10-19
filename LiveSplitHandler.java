@@ -108,6 +108,10 @@ public class LiveSplitHandler {
 	public static String getCurrentTimerPhase() {
 		return receive("getcurrenttimerphase");
 	}
+	
+	public static String getPreviousSplitName() {
+		return receive("getprevioussplitname");
+	}
 
 	public static void split() {
 		// Input a split
