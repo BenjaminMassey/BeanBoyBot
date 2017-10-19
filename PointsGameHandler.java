@@ -56,9 +56,13 @@ public class PointsGameHandler {
 		ArrayList<Player> players = PlayersHandler.getPlayers();
 
 		for (int i = 0; i < players.size(); i++) {
-			players.get(i).points += SplitGame.getCost();
-			players.get(i).state = 0;
-			players.get(i).investment = 0;
+			
+			if(players.get(i).state == 1)
+			{
+				players.get(i).points += SplitGame.getCost();
+				players.get(i).state = 0;
+				players.get(i).investment = 0;
+			}
 		}
 
 		PlayersHandler.saveAll();
