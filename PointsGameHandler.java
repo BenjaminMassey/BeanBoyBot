@@ -41,6 +41,7 @@ public class PointsGameHandler {
 					players.get(i).points += SplitGame.getCost();
 					players.get(i).state = 0;
 					players.get(i).investment = 0;
+					players.get(i).beginSplit = -1; // Reset the begin split
 
 					PlayersHandler.saveAll();
 					return true;
@@ -72,6 +73,22 @@ public class PointsGameHandler {
 
 		PlayersHandler.addPointsAll(bonus);
 
+		PlayersHandler.saveAll();
+	}
+	
+	public static void addDividendPoints(int bonus, int split) {
+		
+		ArrayList<Player> players = PlayersHandler.getPlayers();
+		
+		for(int i = 0; i < players.size(); i++) {
+			
+			if(players.get(i).beginSplit < split && players.get(i).beginSplit != -1) // if beginSplit == -1 then the player has bought in mid split and will not be rewarded
+			{
+				System.out.println(players.get(i).name + " was invested at split " + players.get(i).beginSplit + " it is currently split" + split);
+				players.get(i).points += bonus;
+			}
+		}
+		
 		PlayersHandler.saveAll();
 	}
 

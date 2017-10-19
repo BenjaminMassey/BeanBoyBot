@@ -13,7 +13,7 @@ public class PlayersHandler {
 		public int points;
 		public int state; // 0 - not invested, 1 - invested, 2 - waiting to sell
 		public int investment; // amount invested
-
+		public int beginSplit; // The split in which this player was invested when the split began. To be updated at each split.
 	}
 
 	private static ArrayList<Player> players;
@@ -46,7 +46,8 @@ public class PlayersHandler {
 			p.points = 100;
 			p.state = 0;
 			p.investment = 0;
-
+			p.beginSplit = -1;
+			
 			players.add(p);
 			saveAll();
 
@@ -94,6 +95,8 @@ public class PlayersHandler {
 
 				p.investment = Integer.parseInt(line.split(":")[3]);
 
+				p.beginSplit = -1; // Initialize beginSplit value
+				
 				players.add(p);
 			}
 
@@ -192,6 +195,15 @@ public class PlayersHandler {
 		}
 	}
 
+	// Set the split in which this player was invested when the split began
+	public static void setBeginSplit(int split) {
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).state == 1) {
+				players.get(i).beginSplit = split;
+			}
+		}
+	}
+	
 	// Iteration handling methods, used from the file handler to iterate through the
 	// vector externally,
 	// Each method will return the specific data a the index location specified
