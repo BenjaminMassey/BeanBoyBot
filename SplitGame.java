@@ -156,23 +156,26 @@ public class SplitGame extends TimerTask {
 	}
 
 	private static void generateValue() {
-		double value = 1; // Start out at maximum value, then will subtract
-		double timeSaveFactor = 0;
-		double timeThroughFactor = 0;
-
-		timeSaveFactor = 1 - ((pb - bpt) / pb); // replaced xx / bpt with / pb - This appears to work much better ... so far.
-
-		timeThroughFactor = 1 - pd;
 		
-		double factor = 1.75 * timeSaveFactor + 0.25 * timeThroughFactor; // max 2
-		
-		factor = Math.pow(factor, 4); // max 16
-		value = 16 - factor;
-		if (value > 16)
-			value = 16;
-		if (value < 0)
-			value = 0;
-		v = value;
+		if (!LiveSplitHandler.getCurrentTimerPhase().equals("Ended")) {
+			double value = 1; // Start out at maximum value, then will subtract
+			double timeSaveFactor = 0;
+			double timeThroughFactor = 0;
+	
+			timeSaveFactor = 1 - ((pb - bpt) / pb); // replaced xx / bpt with / pb - This appears to work much better ... so far.
+	
+			timeThroughFactor = 1 - pd;
+			
+			double factor = 1.75 * timeSaveFactor + 0.25 * timeThroughFactor; // max 2
+			
+			factor = Math.pow(factor, 4); // max 16
+			value = 16 - factor;
+			if (value > 16)
+				value = 16;
+			if (value < 0)
+				value = 0;
+			v = value;
+		}
 	}
 
 	private static void setCost() {
