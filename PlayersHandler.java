@@ -136,6 +136,7 @@ public class PlayersHandler {
 				break;
 			}
 		}
+		handleLow(playerName);
 	}
 
 	// Get the state of a specific player
@@ -225,6 +226,14 @@ public class PlayersHandler {
 
 	public static int getInvestmentAt(int index) {
 		return players.get(index).investment;
+	}
+	
+	public static void handleLow(String playerName) {
+		// Gives someone who hits below an amount that amount (should be a dynamic amount -- will fix later)
+		if (getPoints(playerName) < 45) {
+			TwitchChat.outsideMessage(playerName + ", we'll give you another chance. Here's " + 45 + " points.");
+			addPoints(playerName, 45);
+		}
 	}
 
 }

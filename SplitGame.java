@@ -27,7 +27,7 @@ public class SplitGame extends TimerTask {
 	private static int dividend; // Dividend value
 	private static double diviMultiplier; // Dividend multiplier (as a percentage of delta)
 	
-	private static ArrayList<String> ignoreSplits; // Ignore splits of any name in this ArrayList for dividend rewards (useful for me specifically with my Loading Splits in TTT)
+	private static ArrayList<String> ignoreSplits; // Ignore splits of any name in this ArrayList for dividend rewards (useful specifically with Loading Splits in TTT)
 
 	public void run() {
 		updateSplit();
@@ -55,7 +55,7 @@ public class SplitGame extends TimerTask {
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
-		diviMultiplier = 0.1; // 0 means disabled
+		diviMultiplier = 1; // 0 means disabled
 		TimerTask splitStocks = new SplitGame();
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(splitStocks, 0, 1000);
@@ -97,9 +97,7 @@ public class SplitGame extends TimerTask {
 		split = newSplit;
 	}
 
-	private static void rewardDividends(int thisSplit)
-	{
-
+	private static void rewardDividends(int thisSplit) {
 		if ((int) (Math.abs(d) * diviMultiplier) > 0 && d < 0) { // Added check that delta is negative
 			dividend = (int) (Math.abs(d) * diviMultiplier);
 			TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
@@ -181,6 +179,40 @@ public class SplitGame extends TimerTask {
 
 	public static int getCost() {
 		return cost;
+	}
+	
+	public static void gamble(String player, String message) {
+		// Have a player randomly be given or randomly taken away a given amount
+		
+		// Parse the amount out of the message
+		String amountStr = "";
+		for(int i = 0; i < message.length(); i++) {
+			if (i > 7)
+				amountStr += message.toCharArray()[i];
+		}
+		int amount = 0;
+		try {
+			amount = Integer.parseInt(amountStr);
+		}catch(Exception e) {
+			System.err.println("Oops: " + e);
+		}
+		
+		if(PlayersHandler.getPoints(player) < amount) // Doesn't have enough points
+			TwitchChat.outsideMessage("Gamble " + amount + " with " + PlayersHandler.getPoints(player) + " Kappa");
+		
+		else { // Has enough points
+			Random rng = new Random();
+			double result = rng.nextDouble();
+			
+			if(result < 0.5) {
+				TwitchChat.outsideMessage(player + ", you won " + amount + " points! PogChamp");
+				PlayersHandler.addPoints(player, amount);
+			}
+			else {
+				TwitchChat.outsideMessage(player + ", you lost " + amount + " points... FeelsBadMan");
+				PlayersHandler.removePoints(player, amount);
+			}
+		}
 	}
 
 	private static double stringTimeToSeconds(String givenTime) {

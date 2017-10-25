@@ -103,6 +103,9 @@ public class TwitchChat extends PircBot {
 			else
 				messageChat("Sorry, " + sender + ", but failed to sell... D:");
 		}
+		
+		if (message.startsWith("!gamble "))
+			SplitGame.gamble(sender, message); // Messaging handled there, since need to accomodate for 0 points
 	}
 
 	public static void outsideMessage(String message) {
