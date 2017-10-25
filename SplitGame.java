@@ -174,7 +174,9 @@ public class SplitGame extends TimerTask {
 	}
 
 	private static void setCost() {
-		cost = (int) Math.round(v * scoreMultiplier);
+		if (!LiveSplitHandler.getCurrentTimerPhase().equals("Ended")) { // Fix for calculating a high cost even if u finish a run poorly
+			cost = (int) Math.round(v * scoreMultiplier);
+		}
 	}
 
 	public static int getCost() {
