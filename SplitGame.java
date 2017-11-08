@@ -154,7 +154,7 @@ public class SplitGame extends TimerTask {
 	}
 
 	private static void generateValue() {
-		double value = 1; // Start out at maximum value, then will subtract
+		double value = 16; // Start out at maximum value, then will subtract
 		double timeSaveFactor = 0;
 		double timeThroughFactor = 0;
 
@@ -165,7 +165,7 @@ public class SplitGame extends TimerTask {
 		double factor = 1.75 * timeSaveFactor + 0.25 * timeThroughFactor; // max 2
 		
 		factor = Math.pow(factor, 4); // max 16
-		value = 16 - factor;
+		value -= factor;
 		if (value > 16)
 			value = 16;
 		if (value < 0)
