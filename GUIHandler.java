@@ -65,9 +65,12 @@ public class GUIHandler extends JFrame {
         		botOauth.setText("****************");
         	}
         });
-        
+        /*
         cost = new JLabel("", SwingConstants.CENTER);
         jp.add(cost);
+        */
+        JLabel blank = new JLabel("");
+        jp.add(blank);
         JButton startButton = new JButton("Start");
         jp.add(startButton);
         startButton.addActionListener(new ActionListener(){

@@ -48,14 +48,15 @@ public class SplitGame extends TimerTask {
 		}
 		setCost();
 		updatePB();
-		GUIHandler.cost.setText("Cost: " + Long.toString(cost));
+		output();
+		// GUIHandler.cost.setText("Cost: " + Long.toString(cost));
 		// print();
 	}
 
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
-		diviMultiplier = 1; // 0 means disabled
+		diviMultiplier = 0.5; // 0 means disabled
 		TimerTask splitStocks = new SplitGame();
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(splitStocks, 0, 1000);
@@ -66,7 +67,11 @@ public class SplitGame extends TimerTask {
 	public static void stop() {
 		timer.cancel();
 	}
-
+	
+	private static void output() {
+		FileHandler.writeToFile("Output", "!SplitGame\nCost: " + cost + "\nInvestors: " + PlayersHandler.getInvestorCount());
+	}
+	
 	private static void print() {
 		System.out.println("bpt : " + bpt);
 		System.out.println("ct : " + ct);
@@ -98,6 +103,7 @@ public class SplitGame extends TimerTask {
 	}
 
 	private static void rewardDividends(int thisSplit) {
+		updateD();
 		if ((int) (Math.abs(d) * diviMultiplier) > 0 && d < 0) { // Added check that delta is negative
 			dividend = (int) (Math.abs(d) * diviMultiplier);
 			TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
@@ -194,7 +200,7 @@ public class SplitGame extends TimerTask {
 		}
 		int amount = 0;
 		try {
-			amount = Integer.parseInt(amountStr);
+			amount = Math.abs(Integer.parseInt(amountStr));
 		}catch(Exception e) {
 			System.err.println("Oops: " + e);
 		}

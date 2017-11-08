@@ -72,7 +72,17 @@ public class TwitchChat extends PircBot {
 					+ "into the game, !buy to buy a run, !sell to sell a run and "
 					+ "!points to see your points. A PB will give 50% extra points, "
 					+ "but a reset will only give you 75% of the current cost. I'm still an early version, so "
-					+ "sorry if something doesn't work. Have fun!");
+					+ "sorry if something doesn't work. !SplitGameCommands for all commands.");
+		}
+		
+		if (message.equalsIgnoreCase("!SplitGameCommands")) {
+			messageChat("!join : join the game (start with 100 points) | "
+					+ "!points : check your point count | "
+					+ "!buy : invest in the current run at the current cost (on screen) | "
+					+ "!sell : sell your current run for the current cost (on screen) | "
+					+ "!investment : check how much you bought for (and if you bought) | "
+					+ "!gamble XX : 50% chance to win XX points, 50% chance to lose XX points "
+					+ "!SplitGame : rules");
 		}
 
 		if (message.startsWith("!points"))
@@ -104,8 +114,17 @@ public class TwitchChat extends PircBot {
 				messageChat("Sorry, " + sender + ", but failed to sell... D:");
 		}
 		
+		if (message.startsWith("!investment")) {
+			if(PlayersHandler.getState(sender) > 0) {
+				messageChat("Hey, " + sender + ". You invested for " + PlayersHandler.getInvestment(sender)
+							+ " points.");
+			}
+			else
+				messageChat(sender + "? you haven't bought yet! You silly goose!");
+		}
+		
 		if (message.startsWith("!gamble "))
-			SplitGame.gamble(sender, message); // Messaging handled there, since need to accomodate for 0 points
+			SplitGame.gamble(sender, message); // Messaging handled there, since need to accommodate for 0 points
 	}
 
 	public static void outsideMessage(String message) {

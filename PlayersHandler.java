@@ -174,6 +174,15 @@ public class PlayersHandler {
 
 		return -1;
 	}
+	
+	public static int getInvestorCount() {
+		int count = 0;
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).state > 0)
+				count++;
+		}
+		return count;
+	}
 
 	// Sets the amount of money this player has invested (currently unused, see
 	// above)

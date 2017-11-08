@@ -22,11 +22,12 @@ public class FileHandler {
 	// stuff
 
 	private static String nl = System.getProperty("line.separator");
-
+	
 	public static void checkForFilesAndCreateIfNone() throws IOException {
 		checkFileAndCreateIfNone("Quotes");
 		checkFileAndCreateIfNone("SplitGame");
 		checkFileAndCreateIfNone("Accounts");
+		checkFileAndCreateIfNone("Output");
 	}
 	
 	private static void checkFileAndCreateIfNone(String filename) throws IOException {
@@ -34,7 +35,19 @@ public class FileHandler {
 		if (!f.exists())
 				f.createNewFile();
 	}
-
+	
+	public static void writeToFile(String fileName, String message) {
+		try {
+			File file = new File(fileName + ".txt");
+			FileWriter fw = new FileWriter(file, false);
+			fw.write(message);
+			fw.flush();
+			fw.close();
+		} catch (Exception e) {
+			System.err.println("Oops: " + e);
+		}
+	}
+	
 	public static void appendToFile(String fileName, String message) {
 		// Write a given message to a text file with given fileName
 
