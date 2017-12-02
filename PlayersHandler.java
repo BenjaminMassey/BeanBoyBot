@@ -239,10 +239,11 @@ public class PlayersHandler {
 	
 	public static void handleLow(String playerName) {
 		// Gives someone who hits below an amount that amount (should be a dynamic amount -- will fix later)
-		if (getPoints(playerName) < 45) {
-			TwitchChat.outsideMessage(playerName + ", we'll give you another chance. Here's " + 45 + " points.");
-			addPoints(playerName, 45);
-		}
+		if (getPoints(playerName) < 30) 
+			TwitchChat.outsideMessage(playerName + ", looks like "+
+					"you're low on points beanssMS . Luckily you "+
+					"get 3 points for every minute watching, so "+
+					"you'll be back in it in no time!");
 	}
 
 }

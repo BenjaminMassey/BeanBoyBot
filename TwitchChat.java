@@ -34,6 +34,7 @@ public class TwitchChat extends PircBot {
 		bot.setVerbose(true);
 		bot.connect("irc.twitch.tv", 6667, AccountsManager.getBotOauth());
 		bot.joinChannel(channel);
+		new Thread(new StreamMessage()).start();
 	}
 
 	public static void deactivate() throws IOException, IrcException {
@@ -43,7 +44,7 @@ public class TwitchChat extends PircBot {
 
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		// React to a given message
-
+		
 		// Here are the commands that should be taken action for
 		if (message.equalsIgnoreCase("!test"))
 			messageChat("Hey here's my test!");
@@ -82,7 +83,8 @@ public class TwitchChat extends PircBot {
 					+ "!sell : sell your current run for the current cost (on screen) | "
 					+ "!investment : check how much you bought for (and if you bought) | "
 					+ "!gamble XX : 50% chance to win XX points, 50% chance to lose XX points "
-					+ "!SplitGame : rules");
+					+ "!SplitGame : rules | "
+					+ "!buymessage XX : put XX on stream for 1000 points");
 		}
 
 		if (message.startsWith("!points"))
@@ -96,7 +98,7 @@ public class TwitchChat extends PircBot {
 				messageChat("Sorry, " + sender + ", but failed to add you... D:");
 		}
 
-		if (message.startsWith("!buy")) {
+		if (message.equalsIgnoreCase("!buy")) {
 			boolean bought = PointsGameHandler.buyRun(sender);
 			if (bought)
 				messageChat("Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost()
@@ -125,6 +127,24 @@ public class TwitchChat extends PircBot {
 		
 		if (message.startsWith("!gamble "))
 			SplitGame.gamble(sender, message); // Messaging handled there, since need to accommodate for 0 points
+	
+		if (message.startsWith("!buymessage "))
+			StreamMessage.add(sender, message);
+		
+		if (message.startsWith("!giveme ") && sender.equals("beanssbm"))
+			PlayersHandler.addPoints(sender, Integer.parseInt(message.substring(8)));
+	}
+	
+	public static String[] getViewers() {
+		try {
+			User[] users = bot.getUsers(channel);
+			String[] viewers = new String[users.length];
+			for(int i = 0; i < users.length; i++)
+				viewers[i] = users[i].getNick();
+			return viewers;
+		}catch(Exception e) {
+			return new String[0];
+		}
 	}
 
 	public static void outsideMessage(String message) {

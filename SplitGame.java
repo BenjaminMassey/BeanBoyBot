@@ -58,6 +58,7 @@ public class SplitGame extends TimerTask {
 		pb = -1; // Need to check before first update, but in order to check need a value
 		diviMultiplier = 0.5; // 0 means disabled
 		TimerTask splitStocks = new SplitGame();
+		TimeForPoints.start();
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(splitStocks, 0, 1000);
 		ignoreSplits = new ArrayList<String>(); // Make sure to leave this though
@@ -66,12 +67,14 @@ public class SplitGame extends TimerTask {
 
 	public static void stop() {
 		timer.cancel();
+		TimeForPoints.stop();
 	}
 	
 	private static void output() {
 		FileHandler.writeToFile("Output", "!SplitGame\nCost: " + cost + "\nInvestors: " + PlayersHandler.getInvestorCount());
 	}
 	
+	@SuppressWarnings("unused")
 	private static void print() {
 		System.out.println("bpt : " + bpt);
 		System.out.println("ct : " + ct);
@@ -211,12 +214,14 @@ public class SplitGame extends TimerTask {
 		else { // Has enough points
 			Random rng = new Random();
 			double result = rng.nextDouble();
+			double chance = 0.5;
 			
-			if(result < 0.5) {
+			if(result < chance) {
 				TwitchChat.outsideMessage(player + ", you won " + amount + " points! PogChamp");
 				PlayersHandler.addPoints(player, amount);
 			}
 			else {
+				
 				TwitchChat.outsideMessage(player + ", you lost " + amount + " points... FeelsBadMan");
 				PlayersHandler.removePoints(player, amount);
 			}
