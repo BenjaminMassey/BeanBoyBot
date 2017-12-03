@@ -33,6 +33,7 @@ public class TwitchChat extends PircBot {
 		bot = new TwitchChat();
 		bot.setVerbose(true);
 		bot.connect("irc.twitch.tv", 6667, AccountsManager.getBotOauth());
+		bot.sendRawLine("CAP REQ :twitch.tv/membership"); // Allows special stuff (viewer list)
 		bot.joinChannel(channel);
 		new Thread(new StreamMessage()).start();
 	}

@@ -26,6 +26,17 @@ public class PlayersHandler {
 	public static ArrayList<Player> getPlayers() {
 		return players;
 	}
+	
+	public static boolean playing(String name) {
+		// Returns if the given person is playing the game
+		String playerNames = "";
+		for(int i = 0; i < players.size(); i++)
+			playerNames += players.get(i).name;
+		if(playerNames.contains(name))
+			return true;
+		else
+			return false;
+	}
 
 	public static boolean addPlayer(String newName) {
 		boolean newPlayer = true;

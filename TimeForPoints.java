@@ -16,8 +16,10 @@ public class TimeForPoints  extends TimerTask {
 	
 	public void run() {
 		String[] viewers = TwitchChat.getViewers();
-		for(String viewer : viewers)
-			PlayersHandler.addPoints(viewer, 1);
+		for(String viewer : viewers) {
+			if(PlayersHandler.playing(viewer))
+				PlayersHandler.addPoints(viewer, 1);
+		}
 	}
 	
 	public static void stop() {
