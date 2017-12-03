@@ -88,15 +88,23 @@ public class TwitchChat extends PircBot {
 					+ "!buymessage XX : put XX on stream for 1000 points");
 		}
 
-		if (message.startsWith("!points"))
-			messageChat(sender + " has " + PlayersHandler.getPoints(sender) + " points.");
-
+		if (message.startsWith("!points")) {
+			if(!PlayersHandler.playing(sender))
+				messageChat(sender + ", first you gotta !join.");
+			else
+				messageChat(sender + " has " + PlayersHandler.getPoints(sender) + " points.");
+		}
+		
 		if (message.startsWith("!join")) {
 			boolean joined = PlayersHandler.addPlayer(sender);
 			if (joined)
 				messageChat("Thanks for joining, " + sender + "! You start with 100 points.");
-			else
-				messageChat("Sorry, " + sender + ", but failed to add you... D:");
+			else {
+				if(PlayersHandler.playing(sender))
+					messageChat("Silly " + sender + "! You're already in!");
+				else
+					messageChat("Sorry, " + sender + ", but failed to add you... D:");
+			}
 		}
 
 		if (message.equalsIgnoreCase("!buy")) {
@@ -104,8 +112,12 @@ public class TwitchChat extends PircBot {
 			if (bought)
 				messageChat("Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost()
 						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
-			else
-				messageChat("Sorry, " + sender + ", but failed to buy... D:");
+			else {
+				if(!PlayersHandler.playing(sender))
+					messageChat(sender + ", first you gotta !join.");
+				else
+					messageChat("Sorry, " + sender + ", but failed to buy... D:");
+			}
 		}
 
 		if (message.startsWith("!sell")) {
@@ -113,8 +125,12 @@ public class TwitchChat extends PircBot {
 			if (sold)
 				messageChat("Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost()
 						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
-			else
-				messageChat("Sorry, " + sender + ", but failed to sell... D:");
+			else {
+				if(!PlayersHandler.playing(sender))
+					messageChat(sender + ", first you gotta !join.");
+				else
+					messageChat("Sorry, " + sender + ", but failed to sell... D:");
+			}
 		}
 		
 		if (message.startsWith("!investment")) {
@@ -122,18 +138,32 @@ public class TwitchChat extends PircBot {
 				messageChat("Hey, " + sender + ". You invested for " + PlayersHandler.getInvestment(sender)
 							+ " points.");
 			}
-			else
-				messageChat(sender + "? you haven't bought yet! You silly goose!");
+			else {
+				if(!PlayersHandler.playing(sender))
+					messageChat(sender + ", first you gotta !join.");
+				else
+					messageChat(sender + "? you haven't bought yet! You silly goose!");
+			}
 		}
 		
-		if (message.startsWith("!gamble "))
-			SplitGame.gamble(sender, message); // Messaging handled there, since need to accommodate for 0 points
-	
-		if (message.startsWith("!buymessage "))
-			StreamMessage.add(sender, message);
+		if (message.startsWith("!gamble ")) {
+			if(!PlayersHandler.playing(sender))
+				messageChat(sender + ", first you gotta !join.");
+			else
+				SplitGame.gamble(sender, message); // Messaging handled there, since need to accommodate for 0 points
+		}
 		
-		if (message.startsWith("!giveme ") && sender.equals("beanssbm"))
-			PlayersHandler.addPoints(sender, Integer.parseInt(message.substring(8)));
+		if (message.startsWith("!buymessage ")) {
+			if(!PlayersHandler.playing(sender))
+				messageChat(sender + ", first you gotta !join.");
+			else
+				StreamMessage.add(sender, message);
+		}
+		
+		if (message.startsWith("!give ") && sender.equals(channel.substring(1))) {
+			String[] pieces = message.split(" ");
+			PlayersHandler.addPoints(pieces[1], Integer.parseInt(pieces[2]));
+		}
 	}
 	
 	public static String[] getViewers() {
