@@ -72,7 +72,7 @@ public class TwitchChat extends PircBot {
 					+ "and you can buy or sell the run at that price at any "
 					+ "time. Think of it like a stock. Use !join to add yourself "
 					+ "into the game, !buy to buy a run, !sell to sell a run and "
-					+ "!points to see your points. A PB will give 50% extra points, "
+					+ "!points to see your points. A PB will give double points, "
 					+ "but a reset will only give you 75% of the current cost. I'm still an early version, so "
 					+ "sorry if something doesn't work. !SplitGameCommands for all commands.");
 		}
@@ -85,7 +85,7 @@ public class TwitchChat extends PircBot {
 					+ "!investment : check how much you bought for (and if you bought) | "
 					+ "!gamble XX : 50% chance to win XX points, 50% chance to lose XX points "
 					+ "!SplitGame : rules | "
-					+ "!buymessage XX : put XX on stream for 1000 points");
+					+ "!buymessage XX : put XX on stream for 12 seconds for 1000 points");
 		}
 
 		if (message.startsWith("!points")) {
@@ -115,8 +115,12 @@ public class TwitchChat extends PircBot {
 			else {
 				if(!PlayersHandler.playing(sender))
 					messageChat(sender + ", first you gotta !join.");
-				else
-					messageChat("Sorry, " + sender + ", but failed to buy... D:");
+				else {
+					if(PlayersHandler.getState(sender) > 0)
+						messageChat("You already bought, " + sender + "!");
+					else
+						messageChat("Sorry, " + sender + ", but failed to buy... D:");
+				}
 			}
 		}
 
@@ -128,8 +132,12 @@ public class TwitchChat extends PircBot {
 			else {
 				if(!PlayersHandler.playing(sender))
 					messageChat(sender + ", first you gotta !join.");
-				else
-					messageChat("Sorry, " + sender + ", but failed to sell... D:");
+				else {
+					if(PlayersHandler.getState(sender) == 0)
+						messageChat(sender + ", first you need to !buy");
+					else
+						messageChat("Sorry, " + sender + ", but failed to sell... D:");
+				}
 			}
 		}
 		

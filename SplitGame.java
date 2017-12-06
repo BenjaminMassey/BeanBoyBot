@@ -42,7 +42,7 @@ public class SplitGame extends TimerTask {
 			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
 		}
 		if (checkPB()) {
-			cost = (int) Math.round(cost * 1.5);
+			cost = (int) Math.round(cost * 2);
 			PointsGameHandler.sellAll();
 			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
 		}

@@ -13,7 +13,7 @@ public class StreamMessage implements Runnable{
 				messages.remove(0);
 				FileHandler.writeToFile("StreamMessage", message);
 				try {
-					Thread.sleep(8000);
+					Thread.sleep(12000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
