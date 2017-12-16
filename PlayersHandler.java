@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+import bbb.PlayersHandler.Player;
+
 public class PlayersHandler {
 
 	public static class Player {
@@ -256,5 +258,79 @@ public class PlayersHandler {
 					"get 3 points for every minute watching, so "+
 					"you'll be back in it in no time!");
 	}
-
+	
+	public static boolean orderPlayers() {
+		// Order the player list by number of points (returns whether ordered)
+		
+		ArrayList<Player> list = getPlayers(); // Temp list of players
+		// Check if already ordered
+		if(checkOrder(list))
+			return true;
+		// Order the temp player list
+		for (int i = 0; i < list.size() - 1; i++)
+        {
+			int minIndex = i;
+            int index = i;
+            for (int j = i + 1; j < list.size(); j++) {
+            	int a = list.get(j).points + list.get(j).investment;
+            	int b = list.get(minIndex).points + list.get(minIndex).investment;
+            	if (b < a)
+            		minIndex = j;
+            }
+            Player smallerElement = list.get(index);
+            list.set(index, list.get(minIndex));
+            list.set(minIndex, smallerElement);
+        }
+		// Set players to our now ordered list
+		boolean safe = checkOrder(list);
+		if(safe) {
+			players = list;
+			return true;
+		}
+		else
+			return false;
+	}
+	private static boolean checkOrder(ArrayList<Player> list) {
+		// Confirm the order of the player list
+		Player prevEntry = new Player(); // Temp player for the first check
+		prevEntry.name = "x";
+		prevEntry.points = 9999999;
+		prevEntry.investment = 9999999;
+		for (Player currEntry: list) {
+    		int a = currEntry.points + currEntry.investment;
+    		int b = prevEntry.points + prevEntry.investment;
+    	    if (b < a) {
+    	    	System.out.println("UHOH " + prevEntry.name + " lower than " + currEntry.name);
+    	        return false;
+    	    }
+    	    prevEntry = currEntry;
+    	}
+		return true;
+	}
+	public static int getPlacement(String player) {
+		if(orderPlayers()) {
+			for(int i = 0; i < getSize(); i++) { // First place 0, but that's me so good
+				if(players.get(i).name.equals(player))
+					return i;
+			}
+			return 42069; // Error code for didn't find that player
+		}
+		else
+			return 666123; // Error code for players not ordered
+	}
+	public static String getLeaderBoard() {
+		if(orderPlayers()) {
+			if(getSize() >= 5) {
+				String lb = "";
+				for(int i = 1; i < 5; i++)
+					lb += "#" + i + ": " + players.get(i).name + " | ";
+				lb += "#5: " + players.get(5).name;
+				return lb;
+			}
+			else
+				return "Need more players FeelsBadMan";
+		}
+		else
+			return "Sorry but failed to order the players D:";
+	}
 }

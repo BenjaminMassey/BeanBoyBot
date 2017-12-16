@@ -92,7 +92,8 @@ public class TwitchChat extends PircBot {
 			if(!PlayersHandler.playing(sender))
 				messageChat(sender + ", first you gotta !join.");
 			else
-				messageChat(sender + " has " + PlayersHandler.getPoints(sender) + " points.");
+				messageChat(sender + " has " + PlayersHandler.getPoints(sender) + 
+						" points and is rank #" + PlayersHandler.getPlacement(sender));
 		}
 		
 		if (message.startsWith("!join")) {
@@ -172,6 +173,9 @@ public class TwitchChat extends PircBot {
 			String[] pieces = message.split(" ");
 			PlayersHandler.addPoints(pieces[1], Integer.parseInt(pieces[2]));
 		}
+		
+		if(message.equalsIgnoreCase("!leaderboard"))
+			messageChat(PlayersHandler.getLeaderBoard());
 	}
 	
 	public static String[] getViewers() {
