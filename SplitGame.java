@@ -108,7 +108,7 @@ public class SplitGame extends TimerTask {
 	private static void rewardDividends(int thisSplit) {
 		updateD();
 		if ((int) (Math.abs(d) * diviMultiplier) > 0 && d < 0) { // Added check that delta is negative
-			dividend = (int) (Math.abs(d) * diviMultiplier);
+			dividend = (int) Math.ceil(Math.abs(d) * diviMultiplier);
 			TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
 			PointsGameHandler.addDividendPoints(dividend, thisSplit); // Wrote new function that checks players.beginSplit
 		}

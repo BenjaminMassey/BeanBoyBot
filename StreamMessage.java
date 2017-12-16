@@ -1,16 +1,22 @@
 package bbb;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class StreamMessage implements Runnable{
 	
 	private static ArrayList<String> messages = new ArrayList<String>();
+	private static File soundEffect = new File("MessageSound.wav");
 	
 	public void run() {
 		while(TwitchChat.connected) {
 			if(messages.size() > 0) {
 				String message = messages.get(0);
 				messages.remove(0);
+				playSound(soundEffect, false);
 				FileHandler.writeToFile("StreamMessage", message);
 				try {
 					Thread.sleep(12000);
@@ -49,4 +55,16 @@ public class StreamMessage implements Runnable{
 		}
 	}
 	
+	// Credit to: https://www.youtube.com/watch?v=QVrxiJyLTqU for help
+	private static void playSound(File soundFile, boolean synchronous) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(soundFile));
+			clip.start();
+			if(synchronous)
+				Thread.sleep(clip.getMicrosecondLength() / 1000);
+		}catch(Exception e) {
+			System.err.println("Error with sound: " + e);
+		}
+	}
 }
