@@ -36,6 +36,7 @@ public class TwitchChat extends PircBot {
 		bot.sendRawLine("CAP REQ :twitch.tv/membership"); // Allows special stuff (viewer list)
 		bot.joinChannel(channel);
 		new Thread(new StreamMessage()).start();
+		new Thread(new StreamEmote()).start();
 	}
 
 	public static void deactivate() throws IOException, IrcException {
@@ -88,7 +89,7 @@ public class TwitchChat extends PircBot {
 					+ "!buymessage XX : put XX on stream for 12 seconds for 1000 points");
 		}
 
-		if (message.startsWith("!points")) {
+		if (message.equalsIgnoreCase("!points")) {
 			if(!PlayersHandler.playing(sender))
 				messageChat(sender + ", first you gotta !join.");
 			else
@@ -96,7 +97,7 @@ public class TwitchChat extends PircBot {
 						" points and is rank #" + PlayersHandler.getPlacement(sender));
 		}
 		
-		if (message.startsWith("!join")) {
+		if (message.equalsIgnoreCase("!join")) {
 			boolean joined = PlayersHandler.addPlayer(sender);
 			if (joined)
 				messageChat("Thanks for joining, " + sender + "! You start with 100 points.");
@@ -125,7 +126,7 @@ public class TwitchChat extends PircBot {
 			}
 		}
 
-		if (message.startsWith("!sell")) {
+		if (message.equalsIgnoreCase("!sell")) {
 			boolean sold = PointsGameHandler.sellRun(sender);
 			if (sold)
 				messageChat("Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost()
@@ -142,7 +143,7 @@ public class TwitchChat extends PircBot {
 			}
 		}
 		
-		if (message.startsWith("!investment")) {
+		if (message.equalsIgnoreCase("!investment")) {
 			if(PlayersHandler.getState(sender) > 0) {
 				messageChat("Hey, " + sender + ". You invested for " + PlayersHandler.getInvestment(sender)
 							+ " points.");
@@ -169,9 +170,38 @@ public class TwitchChat extends PircBot {
 				StreamMessage.add(sender, message);
 		}
 		
-		if (message.startsWith("!give ") && sender.equals(channel.substring(1))) {
-			String[] pieces = message.split(" ");
-			PlayersHandler.addPoints(pieces[1], Integer.parseInt(pieces[2]));
+		if (message.startsWith("!buyemote ")) {
+			if(!PlayersHandler.playing(sender))
+				messageChat(sender + ", first you gotta !join.");
+			else
+				StreamEmote.add(sender, message);
+		}
+		
+		if (message.startsWith("!give ")) {
+			try {
+				String[] pieces = message.split(" ");
+				int points = Integer.parseInt(pieces[2]);
+				String receiver = pieces[1];
+				String channelOwner = channel.substring(1);
+				if (sender.equals(channelOwner)) {// If channel owner
+					PlayersHandler.addPoints(receiver, points); // Just give the points - not transfer
+					messageChat(pieces[1] + " was blessed by THE " + channel.substring(1) + " himself!");
+				}
+				else { // Randy
+					if(PlayersHandler.getPoints(sender) > points) {
+						PlayersHandler.removePoints(sender, points);
+						PlayersHandler.addPoints(receiver, points);
+						messageChat(sender + " gave " + receiver + " "
+								+ points + " points.");
+					}
+					else
+						messageChat(sender + " doesn't have that many "
+								+ "points to give! D:");
+				}
+			}catch(Exception e) {
+				messageChat("Failed! Make sure to use this format: "
+						+ "'!give RECIPIENT NUMPOINTS'");
+			}
 		}
 		
 		if(message.equalsIgnoreCase("!leaderboard"))
