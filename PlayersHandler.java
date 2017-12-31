@@ -139,6 +139,23 @@ public class PlayersHandler {
 				break;
 			}
 		}
+		checkRankUp(playerName);
+	}
+	
+	private static void checkRankUp(String name) {
+		int myPlace = PlayersHandler.getPlacement(name);
+		if(myPlace == 0)
+			return;
+		int upPlace = myPlace - 1;
+		int myPoints = PlayersHandler.getPointsAt(myPlace);
+		int upPoints = PlayersHandler.getPointsAt(upPlace);
+		if(myPoints > upPoints) {
+			Player me = players.get(myPlace);
+			Player up = players.get(upPlace);
+			players.set(upPlace, me);
+			players.set(myPlace, up);
+			checkRankUp(name);
+		}
 	}
 
 	// Remove points from a specific player by name
@@ -150,6 +167,22 @@ public class PlayersHandler {
 			}
 		}
 		handleLow(playerName);
+		checkRankDown(playerName);
+	}
+	private static void checkRankDown(String name) {
+		int myPlace = PlayersHandler.getPlacement(name);
+		if(myPlace == players.size() - 1)
+			return;
+		int downPlace = myPlace + 1;
+		int myPoints = PlayersHandler.getPointsAt(myPlace);
+		int downPoints = PlayersHandler.getPointsAt(downPlace);
+		if(myPoints < downPoints) {
+			Player me = players.get(myPlace);
+			Player down = players.get(downPlace);
+			players.set(downPlace, me);
+			players.set(myPlace, down);
+			checkRankDown(name);
+		}
 	}
 
 	// Get the state of a specific player
@@ -259,7 +292,8 @@ public class PlayersHandler {
 					"you'll be back in it in no time!");
 	}
 	
-	public static boolean orderPlayers() {
+	
+	public static boolean orderAllPlayers() {
 		// Order the player list by number of points (returns whether ordered)
 		
 		ArrayList<Player> list = getPlayers(); // Temp list of players
@@ -308,7 +342,7 @@ public class PlayersHandler {
 		return true;
 	}
 	public static int getPlacement(String player) {
-		if(orderPlayers()) {
+		if(orderAllPlayers()) {
 			for(int i = 0; i < getSize(); i++) { // First place 0, but that's me so good
 				if(players.get(i).name.equals(player))
 					return i;
@@ -319,7 +353,7 @@ public class PlayersHandler {
 			return 666123; // Error code for players not ordered
 	}
 	public static String getLeaderBoard() {
-		if(orderPlayers()) {
+		if(orderAllPlayers()) {
 			if(getSize() >= 5) {
 				String lb = "";
 				for(int i = 1; i < 5; i++)

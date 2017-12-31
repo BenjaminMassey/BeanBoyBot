@@ -180,7 +180,7 @@ public class TwitchChat extends PircBot {
 		if (message.startsWith("!give ")) {
 			try {
 				String[] pieces = message.split(" ");
-				int points = Integer.parseInt(pieces[2]);
+				int points = Math.abs(Integer.parseInt(pieces[2]));
 				String receiver = pieces[1];
 				String channelOwner = channel.substring(1);
 				if (sender.equals(channelOwner)) {// If channel owner
