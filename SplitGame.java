@@ -209,7 +209,7 @@ public class SplitGame extends TimerTask {
 		}
 		
 		if(PlayersHandler.getPoints(player) < amount) // Doesn't have enough points
-			TwitchChat.outsideMessage("Gamble " + amount + " with " + PlayersHandler.getPoints(player) + " Kappa");
+			TwitchChat.outsidePM(player, "Gamble " + amount + " with " + PlayersHandler.getPoints(player) + " Kappa");
 		
 		else { // Has enough points
 			Random rng = new Random();
@@ -217,12 +217,12 @@ public class SplitGame extends TimerTask {
 			double chance = 0.5;
 			
 			if(result < chance) {
-				TwitchChat.outsideMessage(player + ", you won " + amount + " points! PogChamp");
+				TwitchChat.outsidePM(player, player + ", you won " + amount + " points! PogChamp");
 				PlayersHandler.addPoints(player, amount);
 			}
 			else {
 				
-				TwitchChat.outsideMessage(player + ", you lost " + amount + " points... FeelsBadMan");
+				TwitchChat.outsidePM(player, player + ", you lost " + amount + " points... FeelsBadMan");
 				PlayersHandler.removePoints(player, amount);
 			}
 		}

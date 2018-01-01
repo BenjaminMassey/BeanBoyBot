@@ -48,12 +48,10 @@ public class TwitchChat extends PircBot {
 		// React to a given message
 		
 		// Here are the commands that should be taken action for
-		if (message.equalsIgnoreCase("!test"))
-			messageChat("Hey here's my test!");
 
 		if (message.startsWith("!addquote ")) {
 			QuotesHandler.addQuote(message);
-			messageChat("Added your quote!");
+			bot.sendMessage(sender, "Added your quote!");
 		}
 
 		if (message.startsWith("!quote"))
@@ -68,7 +66,7 @@ public class TwitchChat extends PircBot {
 		}
 
 		if (message.equalsIgnoreCase("!SplitGame")) {
-			messageChat("Now you can play a game in chat with the speedrun! "
+			privateMessage(sender, "Now you can play a game in chat with the speedrun! "
 					+ "The run will always have a 'cost' associated with it, "
 					+ "and you can buy or sell the run at that price at any "
 					+ "time. Think of it like a stock. Use !join to add yourself "
@@ -79,7 +77,7 @@ public class TwitchChat extends PircBot {
 		}
 		
 		if (message.equalsIgnoreCase("!SplitGameCommands")) {
-			messageChat("!join : join the game (start with 100 points) | "
+			privateMessage(sender, "!join : join the game (start with 100 points) | "
 					+ "!points : check your point count | "
 					+ "!buy : invest in the current run at the current cost (on screen) | "
 					+ "!sell : sell your current run for the current cost (on screen) | "
@@ -91,37 +89,37 @@ public class TwitchChat extends PircBot {
 
 		if (message.equalsIgnoreCase("!points")) {
 			if(!PlayersHandler.playing(sender))
-				messageChat(sender + ", first you gotta !join.");
+				privateMessage(sender, "First you gotta !join.");
 			else
-				messageChat(sender + " has " + PlayersHandler.getPoints(sender) + 
-						" points and is rank #" + PlayersHandler.getPlacement(sender));
+				privateMessage(sender, "You have " + PlayersHandler.getPoints(sender) + 
+						" points and are rank #" + PlayersHandler.getPlacement(sender));
 		}
 		
 		if (message.equalsIgnoreCase("!join")) {
 			boolean joined = PlayersHandler.addPlayer(sender);
 			if (joined)
-				messageChat("Thanks for joining, " + sender + "! You start with 100 points.");
+				privateMessage(sender, "Thanks for joining, " + sender + "! You start with 100 points.");
 			else {
 				if(PlayersHandler.playing(sender))
-					messageChat("Silly " + sender + "! You're already in!");
+					privateMessage(sender, "Silly " + sender + "! You're already in!");
 				else
-					messageChat("Sorry, " + sender + ", but failed to add you... D:");
+					privateMessage(sender, "Sorry, " + sender + ", but failed to add you... D:");
 			}
 		}
 
 		if (message.equalsIgnoreCase("!buy")) {
 			boolean bought = PointsGameHandler.buyRun(sender);
 			if (bought)
-				messageChat("Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost()
+				privateMessage(sender, "Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost()
 						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
 			else {
 				if(!PlayersHandler.playing(sender))
-					messageChat(sender + ", first you gotta !join.");
+					privateMessage(sender, sender + ", first you gotta !join.");
 				else {
 					if(PlayersHandler.getState(sender) > 0)
-						messageChat("You already bought, " + sender + "!");
+						privateMessage(sender, "You already bought, " + sender + "!");
 					else
-						messageChat("Sorry, " + sender + ", but failed to buy... D:");
+						privateMessage(sender, "Sorry, " + sender + ", but failed to buy... D:");
 				}
 			}
 		}
@@ -129,50 +127,50 @@ public class TwitchChat extends PircBot {
 		if (message.equalsIgnoreCase("!sell")) {
 			boolean sold = PointsGameHandler.sellRun(sender);
 			if (sold)
-				messageChat("Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost()
+				privateMessage(sender, "Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost()
 						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
 			else {
 				if(!PlayersHandler.playing(sender))
-					messageChat(sender + ", first you gotta !join.");
+					privateMessage(sender, sender + ", first you gotta !join.");
 				else {
 					if(PlayersHandler.getState(sender) == 0)
-						messageChat(sender + ", first you need to !buy");
+						privateMessage(sender, sender + ", first you need to !buy");
 					else
-						messageChat("Sorry, " + sender + ", but failed to sell... D:");
+						privateMessage(sender, "Sorry, " + sender + ", but failed to sell... D:");
 				}
 			}
 		}
 		
 		if (message.equalsIgnoreCase("!investment")) {
 			if(PlayersHandler.getState(sender) > 0) {
-				messageChat("Hey, " + sender + ". You invested for " + PlayersHandler.getInvestment(sender)
+				privateMessage(sender, "Hey, " + sender + ". You invested for " + PlayersHandler.getInvestment(sender)
 							+ " points.");
 			}
 			else {
 				if(!PlayersHandler.playing(sender))
-					messageChat(sender + ", first you gotta !join.");
+					privateMessage(sender, sender + ", first you gotta !join.");
 				else
-					messageChat(sender + "? you haven't bought yet! You silly goose!");
+					privateMessage(sender, sender + "? you haven't bought yet! You silly goose!");
 			}
 		}
 		
 		if (message.startsWith("!gamble ")) {
 			if(!PlayersHandler.playing(sender))
-				messageChat(sender + ", first you gotta !join.");
+				privateMessage(sender, sender + ", first you gotta !join.");
 			else
 				SplitGame.gamble(sender, message); // Messaging handled there, since need to accommodate for 0 points
 		}
 		
 		if (message.startsWith("!buymessage ")) {
 			if(!PlayersHandler.playing(sender))
-				messageChat(sender + ", first you gotta !join.");
+				privateMessage(sender, sender + ", first you gotta !join.");
 			else
 				StreamMessage.add(sender, message);
 		}
 		
 		if (message.startsWith("!buyemote ")) {
 			if(!PlayersHandler.playing(sender))
-				messageChat(sender + ", first you gotta !join.");
+				privateMessage(sender, sender + ", first you gotta !join.");
 			else
 				StreamEmote.add(sender, message);
 		}
@@ -197,14 +195,14 @@ public class TwitchChat extends PircBot {
 									+ points + " points.");
 						}
 						else
-							messageChat(sender + " doesn't have that many "
+							privateMessage(sender, sender + ", you don't have that many "
 									+ "points to give! D:");
 					}
 				}
 				else
-					messageChat("Cannot find player " + receiver);
+					privateMessage(sender, "Cannot find player " + receiver);
 			}catch(Exception e) {
-				messageChat("Failed! Make sure to use this format: "
+				privateMessage(sender, "Failed! Make sure to use this format: "
 						+ "'!give RECIPIENT NUMPOINTS'");
 			}
 		}
@@ -223,9 +221,9 @@ public class TwitchChat extends PircBot {
 					}
 				}
 				else
-					messageChat("Cannot find player " + loser);
+					privateMessage(sender, "Cannot find player " + loser);
 			}catch(Exception e) {
-				messageChat("Failed! Make sure to use this format: "
+				privateMessage(sender, "Failed! Make sure to use this format: "
 						+ "'!take RECIPIENT NUMPOINTS'");
 			}
 		}
@@ -234,16 +232,16 @@ public class TwitchChat extends PircBot {
 			try {
 				String player = message.substring(7);
 				player = player.toLowerCase();
-				messageChat(player + " has " + PlayersHandler.getPoints(player)
+				privateMessage(sender, player + " has " + PlayersHandler.getPoints(player)
 						+ " points.");
 			}catch(Exception e) {
-				messageChat("Failed to check...");
+				privateMessage(sender, "Failed to check...");
 				System.err.println(e);
 			}
 		}
 		
 		if(message.equalsIgnoreCase("!leaderboard"))
-			messageChat(PlayersHandler.getLeaderBoard());
+			privateMessage(sender, PlayersHandler.getLeaderBoard());
 	}
 	
 	public static String[] getViewers() {
@@ -260,6 +258,14 @@ public class TwitchChat extends PircBot {
 
 	public static void outsideMessage(String message) {
 		bot.messageChat(message);
+	}
+	
+	public static void outsidePM(String person, String message) {
+		bot.messageChat("/w " + person + " " + message);
+	}
+	
+	private void privateMessage(String person, String message) {
+		messageChat("/w " + person + " " + message);
 	}
 
 	private void messageChat(String message) {
