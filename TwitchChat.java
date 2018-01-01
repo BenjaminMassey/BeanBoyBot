@@ -182,25 +182,63 @@ public class TwitchChat extends PircBot {
 				String[] pieces = message.split(" ");
 				int points = Math.abs(Integer.parseInt(pieces[2]));
 				String receiver = pieces[1];
-				String channelOwner = channel.substring(1);
-				if (sender.equals(channelOwner)) {// If channel owner
-					PlayersHandler.addPoints(receiver, points); // Just give the points - not transfer
-					messageChat(pieces[1] + " was blessed by THE " + channel.substring(1) + " himself!");
-				}
-				else { // Randy
-					if(PlayersHandler.getPoints(sender) > points) {
-						PlayersHandler.removePoints(sender, points);
-						PlayersHandler.addPoints(receiver, points);
-						messageChat(sender + " gave " + receiver + " "
-								+ points + " points.");
+				receiver = receiver.toLowerCase();
+				if(PlayersHandler.playing(receiver)) {
+					String channelOwner = channel.substring(1);
+					if (sender.equals(channelOwner)) {// If channel owner
+						PlayersHandler.addPoints(receiver, points); // Just give the points - not transfer
+						messageChat(pieces[1] + " was blessed by THE " + channel.substring(1) + " himself!");
 					}
-					else
-						messageChat(sender + " doesn't have that many "
-								+ "points to give! D:");
+					else { // Randy
+						if(PlayersHandler.getPoints(sender) > points) {
+							PlayersHandler.removePoints(sender, points);
+							PlayersHandler.addPoints(receiver, points);
+							messageChat(sender + " gave " + receiver + " "
+									+ points + " points.");
+						}
+						else
+							messageChat(sender + " doesn't have that many "
+									+ "points to give! D:");
+					}
 				}
+				else
+					messageChat("Cannot find player " + receiver);
 			}catch(Exception e) {
 				messageChat("Failed! Make sure to use this format: "
 						+ "'!give RECIPIENT NUMPOINTS'");
+			}
+		}
+		
+		if(message.startsWith("!take")) {
+			try {
+				String[] pieces = message.split(" ");
+				int points = Math.abs(Integer.parseInt(pieces[2]));
+				String loser = pieces[1];
+				loser = loser.toLowerCase();
+				if(PlayersHandler.playing(loser)) {
+					String channelOwner = channel.substring(1);
+					if (sender.equals(channelOwner)) {// If channel owner
+						PlayersHandler.removePoints(loser, points); // Just give the points - not transfer
+						messageChat(pieces[1] + " was smited by THE " + channel.substring(1) + " himself!");
+					}
+				}
+				else
+					messageChat("Cannot find player " + loser);
+			}catch(Exception e) {
+				messageChat("Failed! Make sure to use this format: "
+						+ "'!take RECIPIENT NUMPOINTS'");
+			}
+		}
+		
+		if(message.startsWith("!check")) {
+			try {
+				String player = message.substring(7);
+				player = player.toLowerCase();
+				messageChat(player + " has " + PlayersHandler.getPoints(player)
+						+ " points.");
+			}catch(Exception e) {
+				messageChat("Failed to check...");
+				System.err.println(e);
 			}
 		}
 		
