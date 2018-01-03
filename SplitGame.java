@@ -217,12 +217,17 @@ public class SplitGame extends TimerTask {
 			double chance = 0.5;
 			
 			if(result < chance) {
-				TwitchChat.outsidePM(player, player + ", you won " + amount + " points! PogChamp");
+				if(amount < 1000)
+					TwitchChat.outsidePM(player, player + ", you won " + amount + " points! PogChamp");
+				else
+					TwitchChat.outsideMessage(player + ", you won " + amount + " points! PogChamp");
 				PlayersHandler.addPoints(player, amount);
 			}
 			else {
-				
-				TwitchChat.outsidePM(player, player + ", you lost " + amount + " points... FeelsBadMan");
+				if (amount < 1000)
+					TwitchChat.outsidePM(player, player + ", you lost " + amount + " points... FeelsBadMan");
+				else
+					TwitchChat.outsideMessage(player + ", you lost " + amount + " points... FeelsBadMan");
 				PlayersHandler.removePoints(player, amount);
 			}
 		}

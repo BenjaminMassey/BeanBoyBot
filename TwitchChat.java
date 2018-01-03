@@ -18,6 +18,7 @@ public class TwitchChat extends PircBot {
 	public static boolean connected = false;
 	private static String channel; // What channel the bot should talk to/read from
 	private static TwitchChat bot;
+	private static TwitchChat whisperBot;
 
 	public TwitchChat() {
 		// Quick mini setup
@@ -34,6 +35,9 @@ public class TwitchChat extends PircBot {
 		bot.setVerbose(true);
 		bot.connect("irc.twitch.tv", 6667, AccountsManager.getBotOauth());
 		bot.sendRawLine("CAP REQ :twitch.tv/membership"); // Allows special stuff (viewer list)
+		// Below are two common permissions but I don't need them yet
+		//bot.sendRawLine("CAP REQ :twitch.tv/tags");
+		//bot.sendRawLine("CAP REQ :twitch.tv/commands");
 		bot.joinChannel(channel);
 		new Thread(new StreamMessage()).start();
 		new Thread(new StreamEmote()).start();
@@ -66,14 +70,15 @@ public class TwitchChat extends PircBot {
 		}
 
 		if (message.equalsIgnoreCase("!SplitGame")) {
-			privateMessage(sender, "Now you can play a game in chat with the speedrun! "
+			messageChat("Now you can play a game in chat with the speedrun! "
 					+ "The run will always have a 'cost' associated with it, "
 					+ "and you can buy or sell the run at that price at any "
-					+ "time. Think of it like a stock. Use !join to add yourself "
-					+ "into the game, !buy to buy a run, !sell to sell a run and "
-					+ "!points to see your points. A PB will give double points, "
-					+ "but a reset will only give you 75% of the current cost. I'm still an early version, so "
-					+ "sorry if something doesn't work. !SplitGameCommands for all commands.");
+					+ "time. Think of it like a stock. "
+					+ "First use !join to add yourself, then !buy and !sell to play. "
+					+ "Plus !points to see your points. "
+					+ "A PB will give double points, but a reset will only give you 75% "
+					+ "of the current cost. Make sure to follow me to receive my whispers! "
+					+ "Also !SplitGameCommands for all commands.");
 		}
 		
 		if (message.equalsIgnoreCase("!SplitGameCommands")) {
@@ -84,7 +89,8 @@ public class TwitchChat extends PircBot {
 					+ "!investment : check how much you bought for (and if you bought) | "
 					+ "!gamble XX : 50% chance to win XX points, 50% chance to lose XX points "
 					+ "!SplitGame : rules | "
-					+ "!buymessage XX : put XX on stream for 12 seconds for 1000 points");
+					+ "!buymessage XX : put XX on stream for 12 seconds for 1000 points | "
+					+ "!buyemote XX : put XX emote on stream for 8 seconds for 200 points");
 		}
 
 		if (message.equalsIgnoreCase("!points")) {
@@ -261,7 +267,7 @@ public class TwitchChat extends PircBot {
 	}
 	
 	public static void outsidePM(String person, String message) {
-		bot.messageChat("/w " + person + " " + message);
+		bot.privateMessage(person, message);
 	}
 	
 	private void privateMessage(String person, String message) {
