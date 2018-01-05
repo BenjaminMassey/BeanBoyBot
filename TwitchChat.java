@@ -37,7 +37,7 @@ public class TwitchChat extends PircBot {
 		bot.sendRawLine("CAP REQ :twitch.tv/membership"); // Allows special stuff (viewer list)
 		// Below are two common permissions but I don't need them yet
 		//bot.sendRawLine("CAP REQ :twitch.tv/tags");
-		//bot.sendRawLine("CAP REQ :twitch.tv/commands");
+		bot.sendRawLine("CAP REQ :twitch.tv/commands");
 		bot.joinChannel(channel);
 		new Thread(new StreamMessage()).start();
 		new Thread(new StreamEmote()).start();
@@ -248,6 +248,14 @@ public class TwitchChat extends PircBot {
 		
 		if(message.equalsIgnoreCase("!leaderboard"))
 			privateMessage(sender, PlayersHandler.getLeaderBoard());
+	}
+	
+	protected void onUnknown(String line) {
+		if(line.contains("WHISPER")) {
+			String sender = line.split("!")[0].substring(1);
+			String message = line.split("WHISPER ")[1].split(" :")[1];
+			onMessage(channel, sender, "", "", message);
+		}
 	}
 	
 	public static String[] getViewers() {
