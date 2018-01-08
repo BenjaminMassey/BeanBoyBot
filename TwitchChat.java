@@ -55,7 +55,8 @@ public class TwitchChat extends PircBot {
 
 		if (message.startsWith("!addquote ")) {
 			QuotesHandler.addQuote(message);
-			bot.sendMessage(sender, "Added your quote!");
+			messageChat("Added your quote! (# " + 
+					FileHandler.getFileLength("Quotes") + ")");
 		}
 
 		if (message.startsWith("!quote"))
