@@ -82,7 +82,13 @@ public class TwitchChat extends PircBot {
 					+ "you can do, and have fun!");
 		}
 		
-		
+		if (message.equalsIgnoreCase("!flex")) {
+			if(PlayersHandler.getLeaderBoard().contains(sender))
+				messageChat("Damn, " + sender + " has " + PlayersHandler.getPoints(sender)
+						+ " points! PogChamp");
+			else
+				privateMessage(sender, "Pfff not even on the leaderboard smh");
+		}
 		
 		if (message.equalsIgnoreCase("!join")) {
 			boolean joined = PlayersHandler.addPlayer(sender);
