@@ -58,9 +58,14 @@ public class PointsGameHandler {
 
 		for (int i = 0; i < players.size(); i++) {
 			
+			
+			
 			if(players.get(i).state == 1)
 			{
-				players.get(i).points += SplitGame.getCost();
+				int payout = SplitGame.getCost();
+				TwitchChat.outsidePM(players.get(i).name, "RIP run... You get paid out " 
+						+ payout + " points for a result of " + (payout - players.get(i).investment));
+				players.get(i).points += payout;
 				players.get(i).state = 0;
 				players.get(i).investment = 0;
 			}
