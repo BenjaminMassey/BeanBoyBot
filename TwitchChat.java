@@ -41,6 +41,7 @@ public class TwitchChat extends PircBot {
 		bot.joinChannel(channel);
 		new Thread(new StreamMessage()).start();
 		new Thread(new StreamEmote()).start();
+		new Thread(new TimeForPoints()).start();
 	}
 
 	public static void deactivate() throws IOException, IrcException {

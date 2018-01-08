@@ -1,29 +1,36 @@
 package bbb;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class TimeForPoints  extends TimerTask {
+public class TimeForPoints implements Runnable {
 	
-	private static TimerTask tt;
-	private static Timer t;
+	private static boolean running = false;
 	
 	public static void start() {
-		tt = new TimeForPoints();
-		t = new Timer(true);
-		t.scheduleAtFixedRate(tt, 0, 20000);
+		running = true;
 	}
 	
 	public void run() {
-		String[] viewers = TwitchChat.getViewers();
-		for(String viewer : viewers) {
-			if(PlayersHandler.playing(viewer))
-				PlayersHandler.addPoints(viewer, 1);
+		while(TwitchChat.connected && running) {
+			String[] viewers = TwitchChat.getViewers();
+			for(String viewer : viewers) {
+				if(PlayersHandler.playing(viewer))
+					PlayersHandler.addPoints(viewer, 1);
+			}
+			try {
+				Thread.sleep(19000);
+			}catch(Exception e) {
+				System.err.println("Couldn't wait in TimeForPoints: " + e);
+				stop();
+			}
+		}
+		try {
+			Thread.sleep(1000);
+		}catch(Exception e) {
+			System.err.println("Couldn't wait in TimeForPoints: " + e);
+			stop();
 		}
 	}
 	
 	public static void stop() {
-		t.cancel();
-		tt.cancel();
+		running = false;
 	}
 }
