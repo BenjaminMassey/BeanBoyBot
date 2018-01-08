@@ -86,6 +86,7 @@ public class PointsGameHandler {
 			{
 				System.out.println(players.get(i).name + " was invested at split " + players.get(i).beginSplit + " it is currently split" + split);
 				players.get(i).points += bonus;
+				TwitchChat.outsidePM(players.get(i).name, "Thanks for holding onto the run! Enjoy a reward of " + bonus + " points!");
 			}
 		}
 		
