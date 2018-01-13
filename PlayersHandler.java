@@ -34,6 +34,8 @@ public class PlayersHandler {
 		String playerNames = "";
 		for(int i = 0; i < players.size(); i++)
 			playerNames += players.get(i).name;
+		playerNames = playerNames.toLowerCase();
+		name = name.toLowerCase();
 		if(playerNames.contains(name))
 			return true;
 		else

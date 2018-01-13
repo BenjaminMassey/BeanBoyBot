@@ -12,8 +12,11 @@ public class TimeForPoints implements Runnable {
 		while(TwitchChat.connected && running) {
 			String[] viewers = TwitchChat.getViewers();
 			for(String viewer : viewers) {
-				if(PlayersHandler.playing(viewer))
+				System.out.println("I see: " + viewer);
+				if(PlayersHandler.playing(viewer)) {
 					PlayersHandler.addPoints(viewer, 1);
+					System.out.println("Gave time for points to: " + viewer);
+				}
 			}
 			try {
 				Thread.sleep(19000);
