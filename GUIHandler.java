@@ -101,7 +101,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(10,1));
+		jp.setLayout(new GridLayout(13,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -162,6 +162,23 @@ public class GUIHandler extends JFrame {
         
         // Blank space for spacing
         JLabel blank = new JLabel("");
+        jp.add(blank);
+        
+        // Entry to set the score multiplier
+        JTextField scoreMultiplier = new JTextField(20);
+        scoreMultiplier.setText(Double.toString(SplitGame.scoreMultiplier));
+        jp.add(scoreMultiplier);
+        // Button to confirm score multiplier
+        JButton scoreMultiplierConfirm = new JButton("Set Multiplier");
+        jp.add(scoreMultiplierConfirm);
+        scoreMultiplierConfirm.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+        		SplitGame.scoreMultiplier = Double.parseDouble(scoreMultiplier.getText());
+        	}
+        });
+        
+        // Blank space for spacing
+        blank = new JLabel("");
         jp.add(blank);
         
         // Button that toggles the bot on and off

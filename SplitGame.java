@@ -9,7 +9,7 @@ public class SplitGame extends TimerTask {
 	// Copyright 2017 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 
-	private static final double scoreMultiplier = 10;
+	public static double scoreMultiplier = 10;
 
 	private static int split; // For splits, -1 means not started and then counts from 0
 	private static boolean reset; // Whether we have already paid out for the reset
