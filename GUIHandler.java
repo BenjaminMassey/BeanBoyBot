@@ -3,6 +3,8 @@ package bbb;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class GUIHandler extends JFrame {
 	
@@ -33,6 +35,8 @@ public class GUIHandler extends JFrame {
 	
 	public GUIHandler(String name) {
         super(name);
+        
+        ConfigValues.getValues();
         
         nonConfigPanel = generateNonConfigPanel();
         configPanel = generateConfigPanel();
@@ -101,7 +105,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(13,1));
+		jp.setLayout(new GridLayout(16,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -164,16 +168,46 @@ public class GUIHandler extends JFrame {
         JLabel blank = new JLabel("");
         jp.add(blank);
         
+        // Checkbox for toggling stock game
+        JCheckBox stocks = new JCheckBox("Stock Game On");
+        stocks.setSelected(ConfigValues.stocksOn);
+        jp.add(stocks);
+        stocks.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+		            ConfigValues.stocksOn = true;
+		        } else {
+		            ConfigValues.stocksOn = false;
+		        }
+				ConfigValues.writeValues();
+			}
+        });
+        
         // Entry to set the score multiplier
         JTextField scoreMultiplier = new JTextField(20);
-        scoreMultiplier.setText(Double.toString(SplitGame.scoreMultiplier));
+        scoreMultiplier.setText(Double.toString(ConfigValues.scoreMultiplier));
         jp.add(scoreMultiplier);
         // Button to confirm score multiplier
         JButton scoreMultiplierConfirm = new JButton("Set Multiplier");
         jp.add(scoreMultiplierConfirm);
         scoreMultiplierConfirm.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
-        		SplitGame.scoreMultiplier = Double.parseDouble(scoreMultiplier.getText());
+        		ConfigValues.scoreMultiplier = Double.parseDouble(scoreMultiplier.getText());
+        		ConfigValues.writeValues();
+        	}
+        });
+        
+        // Entry to set the dividend multiplier
+        JTextField diviMultiplier = new JTextField(20);
+        diviMultiplier.setText(Double.toString(ConfigValues.dividendRate));
+        jp.add(diviMultiplier);
+        // Button to confirm dividend multiplier
+        JButton diviMultiplierConfirm = new JButton("Set Multiplier");
+        jp.add(diviMultiplierConfirm);
+        diviMultiplierConfirm.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+        		ConfigValues.dividendRate = Double.parseDouble(diviMultiplier.getText());
+        		ConfigValues.writeValues();
         	}
         });
         
@@ -204,7 +238,7 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,300);
+        		frame.setSize(250,450);
         	}
         });
         

@@ -21,7 +21,7 @@ public class FileHandler {
 	// Interacts with text files in terms of reading, writing and other general file
 	// stuff
 
-	private static String nl = System.getProperty("line.separator");
+	public static String nl = System.getProperty("line.separator");
 	
 	public static void checkForFilesAndCreateIfNone() throws IOException {
 		checkFileAndCreateIfNone("Quotes");
@@ -29,6 +29,7 @@ public class FileHandler {
 		checkFileAndCreateIfNone("Accounts");
 		checkFileAndCreateIfNone("Output");
 		checkFileAndCreateIfNone("StreamMessage");
+		checkFileAndCreateIfNone("Config");
 	}
 	
 	private static void checkFileAndCreateIfNone(String filename) throws IOException {
@@ -64,7 +65,7 @@ public class FileHandler {
 	}
 
 	public static String readFromFile(String fileName, int lineNum) {
-		// Read a given lineNum of a given fileName
+		// Read a given lineNum of a given fileName (starts at 0)
 
 		String line = "Failed D:";
 		if (getFileLength(fileName) > 0) {

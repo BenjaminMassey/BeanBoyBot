@@ -9,8 +9,6 @@ public class SplitGame extends TimerTask {
 	// Copyright 2017 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 
-	public static double scoreMultiplier = 10;
-
 	private static int split; // For splits, -1 means not started and then counts from 0
 	private static boolean reset; // Whether we have already paid out for the reset
 
@@ -25,38 +23,45 @@ public class SplitGame extends TimerTask {
 	private static Timer timer;
 
 	private static int dividend; // Dividend value
-	private static double diviMultiplier; // Dividend multiplier (as a percentage of delta)
 	
 	private static ArrayList<String> ignoreSplits; // Ignore splits of any name in this ArrayList for dividend rewards (useful specifically with Loading Splits in TTT)
 
 	public void run() {
-		updateSplit();
-		updateBPT();
-		updateCT();
-		updatePD();
-		updateD();
-		generateValue();
-		if (checkReset()) {
-			cost = (int) Math.round(cost * 0.75);
-			PointsGameHandler.sellAll();
-			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
+		if(ConfigValues.stocksOn) {
+			updateSplit();
+			updateBPT();
+			updateCT();
+			updatePD();
+			updateD();
+			generateValue();
+			if (checkReset()) {
+				cost = (int) Math.round(cost * 0.75);
+				PointsGameHandler.sellAll();
+				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
+			}
+			if (checkPB()) {
+				cost = (int) Math.round(cost * 2);
+				PointsGameHandler.sellAll();
+				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
+			}
+			setCost();
+			updatePB();
+			output();
 		}
-		if (checkPB()) {
-			cost = (int) Math.round(cost * 2);
-			PointsGameHandler.sellAll();
-			TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
+		else {
+			FileHandler.writeToFile("Output", "SplitGame is\r\nnot on!");
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) {
+				System.err.println("Oops: " + e);;
+			}
 		}
-		setCost();
-		updatePB();
-		output();
-		// GUIHandler.cost.setText("Cost: " + Long.toString(cost));
-		// print();
 	}
 
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
-		diviMultiplier = 0.5; // 0 means disabled
+		ConfigValues.dividendRate = 0.5; // 0 means disabled
 		TimerTask splitStocks = new SplitGame();
 		TimeForPoints.start();
 		timer = new Timer(true);
@@ -107,8 +112,8 @@ public class SplitGame extends TimerTask {
 
 	private static void rewardDividends(int thisSplit) {
 		updateD();
-		if ((int) (Math.abs(d) * diviMultiplier) > 0 && d < 0) { // Added check that delta is negative
-			dividend = (int) Math.ceil(Math.abs(d) * diviMultiplier);
+		if ((int) (Math.abs(d) * ConfigValues.dividendRate) > 0 && d < 0) { // Added check that delta is negative
+			dividend = (int) Math.ceil(Math.abs(d) * ConfigValues.dividendRate);
 			TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
 			PointsGameHandler.addDividendPoints(dividend, thisSplit); // Wrote new function that checks players.beginSplit
 		}
@@ -184,7 +189,7 @@ public class SplitGame extends TimerTask {
 
 	private static void setCost() {
 		if (!LiveSplitHandler.getCurrentTimerPhase().equals("Ended")) { // Fix for calculating a high cost even if u finish a run poorly
-			cost = (int) Math.round(v * scoreMultiplier);
+			cost = (int) Math.round(v * ConfigValues.scoreMultiplier);
 		}
 	}
 

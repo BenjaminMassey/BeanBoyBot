@@ -97,6 +97,41 @@ public class TwitchChat extends PircBot {
 					messageChat("Sorry, " + sender + ", but failed to add you... D:");
 			}
 		}
+		
+		if (message.equalsIgnoreCase("!buy") && ConfigValues.stocksOn) {
+			boolean bought = PointsGameHandler.buyRun(sender);
+			if (bought)
+				privateMessage(sender, "Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost()
+						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
+			else {
+				if(!PlayersHandler.playing(sender))
+					privateMessage(sender, sender + ", first you gotta !join.");
+				else {
+					if(PlayersHandler.getState(sender) > 0)
+						privateMessage(sender, "You already bought, " + sender + "!");
+					else
+						privateMessage(sender, "Sorry, " + sender + ", but failed to buy... D:");
+				}
+			}
+		}
+
+		if (message.equalsIgnoreCase("!sell") && ConfigValues.stocksOn) {
+			boolean sold = PointsGameHandler.sellRun(sender);
+			if (sold)
+				privateMessage(sender, "Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost()
+						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
+			else {
+				if(!PlayersHandler.playing(sender))
+					privateMessage(sender, sender + ", first you gotta !join.");
+				else {
+					if(PlayersHandler.getState(sender) == 0)
+						privateMessage(sender, sender + ", first you need to !buy");
+					else
+						privateMessage(sender, "Sorry, " + sender + ", but failed to sell... D:");
+				}
+			}
+		}
+		
 	}
 	
 	protected void onUnknown(String line) {
@@ -130,7 +165,7 @@ public class TwitchChat extends PircBot {
 					privateMessage(sender, "You have " + PlayersHandler.getPoints(sender) + 
 							" points and are rank #" + PlayersHandler.getPlacement(sender));
 			}
-			if (message.equalsIgnoreCase("!buy")) {
+			if (message.equalsIgnoreCase("!buy") && ConfigValues.stocksOn) {
 				boolean bought = PointsGameHandler.buyRun(sender);
 				if (bought)
 					privateMessage(sender, "Thanks for buying, " + sender + "! It cost you " + SplitGame.getCost()
@@ -147,7 +182,7 @@ public class TwitchChat extends PircBot {
 				}
 			}
 
-			if (message.equalsIgnoreCase("!sell")) {
+			if (message.equalsIgnoreCase("!sell") && ConfigValues.stocksOn) {
 				boolean sold = PointsGameHandler.sellRun(sender);
 				if (sold)
 					privateMessage(sender, "Thanks for selling, " + sender + "! It gave you " + SplitGame.getCost()
@@ -164,7 +199,7 @@ public class TwitchChat extends PircBot {
 				}
 			}
 			
-			if (message.equalsIgnoreCase("!investment")) {
+			if (message.equalsIgnoreCase("!investment") && ConfigValues.stocksOn) {
 				if(PlayersHandler.getState(sender) > 0) {
 					privateMessage(sender, "Hey, " + sender + ". You invested for " + PlayersHandler.getInvestment(sender)
 								+ " points.");
