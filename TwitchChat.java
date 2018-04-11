@@ -82,6 +82,11 @@ public class TwitchChat extends PircBot {
 					+ "you can do, and have fun!");
 		}
 		
+		if (message.equalsIgnoreCase("!dnvicShill")) {
+			messageChat("DNVIC, the amazing quote addder, actually has a twitch channel! https://twitch.tv/DNVIC");
+		}
+		// DNVIC added the above command
+		
 		if (message.equalsIgnoreCase("!join")) {
 			boolean joined = PlayersHandler.addPlayer(sender);
 			if (joined)
