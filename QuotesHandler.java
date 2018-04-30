@@ -43,7 +43,6 @@ public class QuotesHandler {
 			}
 			// Then read that number and use it to read that line of the Quotes.txt file
 			num = Integer.valueOf(numStr); // If nonsense will fail, and go to catch to get random quote
-			rawQuote = FileHandler.readFromFile("Quotes", num);
 		}
 		catch(Exception e) {
 			if(FileHandler.getFileLength("Quotes") > 0) { // Only do if there is a quote
