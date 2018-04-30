@@ -18,7 +18,7 @@ public class TwitchChat extends PircBot {
 	public static boolean connected = false;
 	private static String channel; // What channel the bot should talk to/read from
 	private static TwitchChat bot;
-	private static TwitchChat whisperBot;
+	//private static TwitchChat whisperBot;
 
 	public TwitchChat() {
 		// Quick mini setup
@@ -56,7 +56,7 @@ public class TwitchChat extends PircBot {
 
 		if (message.startsWith("!addquote ")) {
 			QuotesHandler.addQuote(message);
-			messageChat("Added your quote! (# " + 
+			messageChat("Added your quote! (#" + 
 					(FileHandler.getFileLength("Quotes") - 1)+ ")");
 		}
 

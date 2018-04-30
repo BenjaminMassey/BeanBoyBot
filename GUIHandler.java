@@ -3,8 +3,6 @@ package bbb;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class GUIHandler extends JFrame {
 	
@@ -88,11 +86,15 @@ public class GUIHandler extends JFrame {
         		else {
         			try{
         				AccountsManager.updateAll();
-        				LiveSplitHandler.initialize();
         				SplitGame.start();
         				TwitchChat.initialize();
         			}catch(Exception e) {
-        				System.err.println("Oops: " + e);
+        				System.err.println("Oops on initialization: " + e);
+        			}
+        			try{
+        				LiveSplitHandler.initialize();
+        			}catch(Exception e) {
+        				System.err.println("Couldn't connect with livesplit: " + e);
         			}
         			startButtonConfig.setText("Stop");
         			startButtonNonConfig.setText("Stop");
