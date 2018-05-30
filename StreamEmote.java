@@ -84,6 +84,13 @@ public class StreamEmote implements Runnable{
 		}
 	}
 	
+	public static void botEmote(String name, String emote) {
+			String emotes = getEmotes();
+			if(emotes.contains(emote)) {
+				messages.add(name + ": " + emote);
+			}
+	}
+	
 	// Credit to: https://www.youtube.com/watch?v=QVrxiJyLTqU for help
 	private static void playSound(File soundFile, boolean synchronous) {
 		try {

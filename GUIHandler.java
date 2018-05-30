@@ -111,7 +111,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(16,1));
+		jp.setLayout(new GridLayout(17,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -184,6 +184,21 @@ public class GUIHandler extends JFrame {
 		            ConfigValues.stocksOn = true;
 		        } else {
 		            ConfigValues.stocksOn = false;
+		        }
+				ConfigValues.writeValues();
+			}
+        });
+        
+     // Checkbox for toggling cheeky emotes
+        JCheckBox cemotes = new JCheckBox("Cheeky Emotes On");
+        cemotes.setSelected(ConfigValues.cheekyEmotes);
+        jp.add(cemotes);
+        cemotes.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+		            ConfigValues.cheekyEmotes = true;
+		        } else {
+		            ConfigValues.cheekyEmotes = false;
 		        }
 				ConfigValues.writeValues();
 			}

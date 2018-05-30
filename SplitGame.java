@@ -39,12 +39,16 @@ public class SplitGame extends TimerTask {
 				cost = (int) Math.round(cost * 0.75);
 				PointsGameHandler.sellAll();
 				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
+				if (ConfigValues.cheekyEmotes)
+					StreamEmote.botEmote("RIP RUN", "FeelsBadMan");
 			}
 			if (checkPB()) {
 				cost = (int) Math.round(cost * 2);
 				PointsGameHandler.sellAll();
 				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
 				pbMessage = true;
+				if (ConfigValues.cheekyEmotes)
+					StreamEmote.botEmote("FINALLY A PB", "FeelsGoodMan");
 			}
 			setCost();
 			updatePB();
