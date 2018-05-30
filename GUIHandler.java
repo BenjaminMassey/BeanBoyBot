@@ -73,31 +73,35 @@ public class GUIHandler extends JFrame {
 		JButton startButton = new JButton("Start");
         startButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
+        		// Stop the bot
         		if(TwitchChat.connected) {
         			try{
         				TwitchChat.deactivate();
         				PlayersHandler.saveAll();
+        				startButtonConfig.setText("Start");
+            			startButtonNonConfig.setText("Start");
         			}catch(Exception e) {
         				System.err.println("Oops: " + e);
         			}
-        			startButtonConfig.setText("Start");
-        			startButtonNonConfig.setText("Start");
         		}
+        		// Start the bot
         		else {
         			try{
-        				AccountsManager.updateAll();
-        				SplitGame.start();
-        				TwitchChat.initialize();
-        			}catch(Exception e) {
-        				System.err.println("Oops on initialization: " + e);
-        			}
-        			try{
         				LiveSplitHandler.initialize();
+        				try{
+            				AccountsManager.updateAll();
+            				SplitGame.start();
+            				TwitchChat.initialize();
+            				startButtonConfig.setText("Stop");
+                			startButtonNonConfig.setText("Stop");
+            			}catch(Exception e) {
+            				System.err.println("Error: " + e);
+            				JOptionPane.showMessageDialog(null,"Failed to initialize...perhaps no internet?");
+            			}
         			}catch(Exception e) {
-        				System.err.println("Couldn't connect with livesplit: " + e);
+        				System.err.println("Error: " + e);
+        				JOptionPane.showMessageDialog(null,"Could not connect to LiveSplit - make sure you started the server!");
         			}
-        			startButtonConfig.setText("Stop");
-        			startButtonNonConfig.setText("Stop");
         		}
         	}
         });
