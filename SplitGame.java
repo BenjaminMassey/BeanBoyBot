@@ -21,6 +21,7 @@ public class SplitGame extends TimerTask {
 
 	private static int cost; // How much a run will cost at the moment
 	private static Timer timer;
+	private static boolean pbMessage; // Toggle for special PB message
 
 	private static int dividend; // Dividend value
 	
@@ -43,10 +44,22 @@ public class SplitGame extends TimerTask {
 				cost = (int) Math.round(cost * 2);
 				PointsGameHandler.sellAll();
 				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
+				pbMessage = true;
 			}
 			setCost();
 			updatePB();
-			output();
+			if (pbMessage) {
+				FileHandler.writeToFile("Output", "Congrats on\r\nthe PB!");
+				if (ct != pb) { pbMessage = false; }
+			}
+			else {
+				output();
+			}
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				System.err.println("Oops: " + e);;
+			}
 		}
 		else {
 			FileHandler.writeToFile("Output", "SplitGame is\r\nnot on!");
@@ -61,6 +74,7 @@ public class SplitGame extends TimerTask {
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
+		pbMessage = false;
 		ConfigValues.dividendRate = 0.5; // 0 means disabled
 		TimerTask splitStocks = new SplitGame();
 		TimeForPoints.start();
