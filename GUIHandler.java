@@ -87,7 +87,8 @@ public class GUIHandler extends JFrame {
         		// Start the bot
         		else {
         			try{
-        				LiveSplitHandler.initialize();
+        				if (ConfigValues.stocksOn)
+        					LiveSplitHandler.initialize();
         				try{
             				AccountsManager.updateAll();
             				SplitGame.start();

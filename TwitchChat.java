@@ -73,23 +73,20 @@ public class TwitchChat extends PircBot {
 
 		if (message.equalsIgnoreCase("!SplitGame")) {
 			messageChat("Now you can play a game in chat with the speedrun! "
-					+ "The run will always have a 'cost' associated with it, "
-					+ "based on the quality of the run, and you can buy or sell "
-					+ "the run at that price at any time. Think of it like a stock. "
-					+ "To start playing, type !join in chat, and then follow "
-					+ "the bot ( https://www.twitch.tv/" + AccountsManager.getBotName() + " ) "
-					+ "to receive whispers! Send it !Commands to see what "
-					+ "you can do, and have fun!");
+					+ "The run acts like a stock. First step is to enter the "
+					+ "game with !join. Then you can buy with !buy, sell with "
+					+ "!sell and check your points with !points. You can whisper "
+					+ "https://www.twitch.tv/" +  AccountsManager.getBotName() + " "
+					+ "!help and/or !summary for more info.");
 		}
 		
 		if (message.equalsIgnoreCase("!join")) {
 			boolean joined = PlayersHandler.addPlayer(sender);
 			if (joined)
 				messageChat("Thanks for joining, " + sender + "! "
-						+ "You start with 100 points. Make sure to follow me "
-						+ "( https://www.twitch.tv/" + AccountsManager.getBotName() + " ) "
-						+ "to start receiving my whispers, and whisper me !Commands "
-						+ "to see how to play!");
+						+ "You start with 100 points. (You can whisper "
+						+ "https://www.twitch.tv/" + AccountsManager.getBotName() + " "
+						+ "!help for more info.)");
 			else {
 				if(PlayersHandler.playing(sender))
 					messageChat("Silly " + sender + "! You're already in!");
@@ -105,7 +102,7 @@ public class TwitchChat extends PircBot {
 						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
 			else {
 				if(!PlayersHandler.playing(sender))
-					privateMessage(sender, sender + ", first you gotta !join.");
+					messageChat(sender + ", first you gotta !join.");
 				else {
 					if(PlayersHandler.getState(sender) > 0)
 						privateMessage(sender, "You already bought, " + sender + "!");
@@ -122,7 +119,7 @@ public class TwitchChat extends PircBot {
 						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points.");
 			else {
 				if(!PlayersHandler.playing(sender))
-					privateMessage(sender, sender + ", first you gotta !join.");
+					messageChat(sender + ", first you gotta !join.");
 				else {
 					if(PlayersHandler.getState(sender) == 0)
 						privateMessage(sender, sender + ", first you need to !buy");
@@ -132,6 +129,13 @@ public class TwitchChat extends PircBot {
 			}
 		}
 		
+		if (message.equalsIgnoreCase("!points")) {
+			if(!PlayersHandler.playing(sender))
+				messageChat(sender + ", first you gotta !join.");
+			else
+				messageChat(sender + " has " + PlayersHandler.getPoints(sender) + 
+						" points (Rank #" + PlayersHandler.getPlacement(sender) + ")");
+		}
 	}
 	
 	protected void onUnknown(String line) {
@@ -139,25 +143,42 @@ public class TwitchChat extends PircBot {
 			String sender = line.split("!")[0].substring(1);
 			String message = line.split("WHISPER ")[1].split(" :")[1];
 			
-			if (message.equalsIgnoreCase("!commands")) {
-				privateMessage(sender, "Use !buy to buy the run at the current cost (on screen), !sell "
-						+ "to sell the run at the current cost (on screen), and !points to check your "
-						+ "current number of points. The run will autosell at only 75% of the cost " 
-						+ "at a reset, so be careful. !AllCommands will get you a list of all the commands, "
-						+ "but those basics should get you started. Have fun!");
+			if (message.equalsIgnoreCase("!help")) {
+				privateMessage(sender, "To get a basic synopsis of the game, message me "
+						+ "!summary. To view all of the commands, message me !commands. Only "
+						+ "!buy, !sell and !points will work in the main chat - everything "
+						+ "else must be done through whsipers.");
 			}
 			
-			if (message.equalsIgnoreCase("!allcommands")) {
+			if (message.equalsIgnoreCase("!summary")) {
+				privateMessage(sender, "The current run will have a cost associated with it. "
+						+ "The cost will change depending on the quality of the run - the "
+						+ "more likely a PB the higher the price, the less likely the lower. "
+						+ "You can buy or sell the current run at any time, so you want to "
+						+ "buy it cheap, and sell it for a high profit. The major catch is "
+						+ "that a reset means the run will autosell - at only 75% of its "
+						+ "cost. So buy low, sell high, and avoid the resets. If you need "
+						+ "more details, feel free to ask!");
+			}
+			
+			if (message.equalsIgnoreCase("!commands")) {
 				privateMessage(sender, "!join : join the game (start with 100 points) | "
 						+ "!points : check your point count | "
 						+ "!buy : invest in the current run at the current cost (on screen) | "
 						+ "!sell : sell your current run for the current cost (on screen) | "
 						+ "!investment : check how much you bought for (and if you bought) | "
-						+ "!gamble XX : 50% chance to win XX points, 50% chance to lose XX points "
-						+ "!buymessage XX : put XX on stream for 12 seconds for 1000 points | "
-						+ "!buyemote XX : put XX emote on stream for 8 seconds for 200 points");
+						+ "!gamble XX : 50% chance to win XX points, 50% chance to lose XX points | "
+						+ "!buymessage XX : put XX on stream for 12 seconds for 1000 points "
+						+ "...for more commands, type !commands2");
 			}
-
+			
+			if(message.equalsIgnoreCase("!commands2")) {
+				privateMessage(sender,"!buyemote XX : put XX emote on stream for 8 seconds for 200 points | "
+						+ "!leaderboard : show the top 5 point holders | "
+						+ "!flex : attempt to show off your points in chat | "
+						+ "!give XX YY : give user XX YY points");
+			}
+			
 			if (message.equalsIgnoreCase("!points")) {
 				if(!PlayersHandler.playing(sender))
 					privateMessage(sender, "First you gotta !join.");

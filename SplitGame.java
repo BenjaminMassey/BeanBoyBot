@@ -215,6 +215,10 @@ public class SplitGame extends TimerTask {
 		return cost;
 	}
 	
+	public static double getTime() {
+		return ct;
+	}
+	
 	public static void gamble(String player, String message) {
 		// Have a player randomly be given or randomly taken away a given amount
 		
