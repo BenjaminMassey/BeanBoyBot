@@ -68,6 +68,7 @@ public class StreamEmote implements Runnable{
 			String emotes = getEmotes();
 			if(emotes.contains(message.substring(10))) {
 				PlayersHandler.removePoints(user, 200);
+				System.out.println("Attempted non-bot emote from " + user + " with " + message.substring(10));
 				messages.add(user + ": " + message.substring(10));
 				TwitchChat.outsideMessage("Your emote has been added "+
 							"to the queue, " + user + ".");
@@ -85,10 +86,11 @@ public class StreamEmote implements Runnable{
 	}
 	
 	public static void botEmote(String name, String emote) {
-			String emotes = getEmotes();
-			if(emotes.contains(emote)) {
-				messages.add(name + ": " + emote);
-			}
+		String emotes = getEmotes();
+		if(emotes.contains(emote)) {
+			System.out.println("Attempted bot emote from " + name + " with " + emote);
+			messages.add(name + ": " + emote);
+		}
 	}
 	
 	// Credit to: https://www.youtube.com/watch?v=QVrxiJyLTqU for help
