@@ -1,5 +1,6 @@
 package bbb;
 
+import java.util.Date;
 import java.util.Random;
 
 public class QuotesHandler {
@@ -23,7 +24,16 @@ public class QuotesHandler {
 			if((FileHandler.getFileLength("Quotes") % 10) == 0)
 				FileHandler.backup("Quotes");
 		}catch(Exception e) { System.err.println("Oops: " + e);}
-
+		
+		String dateRaw = new Date().toString();
+		String[] datePieces = dateRaw.split(" ");
+		String dateStr = datePieces[1] + " " + datePieces[2] + " " + datePieces[5];
+		
+		if (quote.toCharArray()[0] == '"')
+			quote = quote + " - " + dateStr;
+		else
+			quote = '"' + quote + '"' + " - " + dateStr;
+		
 		FileHandler.appendToFile("Quotes", quote + "\n");
 	}
 	
@@ -65,7 +75,10 @@ public class QuotesHandler {
 		}
 		if (num >= 0) { // Untrue => num = -1 => Failed => Ignore
 			rawQuote = FileHandler.readFromFile("Quotes", num);
-			quote = '"' + rawQuote + '"' + " (#" + num + ')';
+			if (rawQuote.toCharArray()[0] == '"')
+				quote = rawQuote + " (#" + num + ')';
+			else
+				quote = '"' + rawQuote + '"' + " (#" + num + ')';
 		}
 		return quote;
 	}
