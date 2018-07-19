@@ -75,10 +75,14 @@ public class QuotesHandler {
 		}
 		if (num >= 0) { // Untrue => num = -1 => Failed => Ignore
 			rawQuote = FileHandler.readFromFile("Quotes", num);
-			if (rawQuote.toCharArray()[0] == '"')
-				quote = rawQuote + " (#" + num + ')';
-			else
-				quote = '"' + rawQuote + '"' + " (#" + num + ')';
+			if (rawQuote.equals("Failed D:"))
+				quote = rawQuote;
+			else {
+				if (rawQuote.toCharArray()[0] == '"')
+					quote = rawQuote + " (#" + num + ')';
+				else
+					quote = '"' + rawQuote + '"' + " (#" + num + ')';
+			}
 		}
 		return quote;
 	}
