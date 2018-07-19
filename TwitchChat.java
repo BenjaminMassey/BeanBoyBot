@@ -176,7 +176,8 @@ public class TwitchChat extends PircBot {
 				privateMessage(sender,"!buyemote XX : put XX emote on stream for 8 seconds for 200 points | "
 						+ "!leaderboard : show the top 5 point holders | "
 						+ "!flex : attempt to show off your points in chat | "
-						+ "!give XX YY : give user XX YY points");
+						+ "!give XX YY : give user XX YY points | "
+						+ "!contact : get email for contact about the bot");
 			}
 			
 			if (message.equalsIgnoreCase("!points")) {
@@ -329,6 +330,9 @@ public class TwitchChat extends PircBot {
 				else
 					privateMessage(sender, "Pfff not even on the leaderboard smh");
 			}
+			
+			if (message.equalsIgnoreCase("!contact"))
+				privateMessage(sender, "contact@speedrunstocks.com");
 		}
 	}
 	
