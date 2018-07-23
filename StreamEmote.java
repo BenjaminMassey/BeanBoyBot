@@ -70,11 +70,12 @@ public class StreamEmote implements Runnable{
 				PlayersHandler.removePoints(user, 200);
 				System.out.println("Attempted non-bot emote from " + user + " with " + message.substring(10));
 				messages.add(user + ": " + message.substring(10));
-				TwitchChat.outsideMessage("Your emote has been added "+
+				TwitchChat.outsideMessage(user + " added " + message.substring(10));
+				TwitchChat.outsidePM(user, "Your emote has been added "+
 							"to the queue, " + user + ".");
 			}
 			else {
-				TwitchChat.outsideMessage("Sorry, " + user + ", but that "+
+				TwitchChat.outsidePM(user, "Sorry, " + user + ", but that "+
 						"emote is not available D:");
 			}
 			

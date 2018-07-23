@@ -243,18 +243,21 @@ public class SplitGame extends TimerTask {
 			double result = rng.nextDouble();
 			double chance = 0.5;
 			
+			// Gamble amount for it to display in chat
+			double cap = PlayersHandler.getPoints(player) * 0.5;
+			if (cap < 100)
+				cap = 100;
+			
 			if(result < chance) {
-				if(amount < 1000)
-					TwitchChat.outsidePM(player, player + ", you won " + amount + " points! PogChamp");
-				else
-					TwitchChat.outsideMessage(player + ", you won " + amount + " points! PogChamp");
+				TwitchChat.outsidePM(player, player + ", you won " + amount + " points! PogChamp");
+				if(amount > cap)
+					TwitchChat.outsideMessage(player + " won " + amount + " points! PogChamp");
 				PlayersHandler.addPoints(player, amount);
 			}
 			else {
-				if (amount < 1000)
-					TwitchChat.outsidePM(player, player + ", you lost " + amount + " points... FeelsBadMan");
-				else
-					TwitchChat.outsideMessage(player + ", you lost " + amount + " points... FeelsBadMan");
+				TwitchChat.outsidePM(player, player + ", you lost " + amount + " points... FeelsBadMan");
+				if (amount > cap)
+					TwitchChat.outsideMessage(player + " lost " + amount + " points... FeelsBadMan");
 				PlayersHandler.removePoints(player, amount);
 			}
 		}

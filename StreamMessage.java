@@ -37,20 +37,21 @@ public class StreamMessage implements Runnable{
 	
 	public static void add(String user, String message) {
 		if(PlayersHandler.getPoints(user) >= 1000) {
-			if(message.length() <= 280) {
+			if(message.length() <= 292) {
 				PlayersHandler.removePoints(user, 1000);
 				messages.add(user + ": " + message.substring(12));
-				TwitchChat.outsideMessage("Your message has been added "+
-							"to the queue, " + user + ".");
+				TwitchChat.outsideMessage(user + " displayed the message: \"" + 
+						message.substring(12) + "\" to the screen.");
+				TwitchChat.outsidePM(user, "Thanks for buying a message for 1000 points!");
 			}
 			else {
-				TwitchChat.outsideMessage("Sorry, " + user + ", but there "+
+				TwitchChat.outsidePM(user, "Sorry, " + user + ", but there "+
 						"is a 280 character limit on messages.");
 			}
 			
 		}
 		else {
-			TwitchChat.outsideMessage("Sorry, " + user + ", but it "+
+			TwitchChat.outsidePM(user, "Sorry, " + user + ", but it "+
 						"it costs 1000 points to buy a message.");
 		}
 	}
