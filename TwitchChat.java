@@ -41,6 +41,7 @@ public class TwitchChat extends PircBot {
 		bot.joinChannel(channel);
 		new Thread(new StreamMessage()).start();
 		new Thread(new StreamEmote()).start();
+		new Thread(new StreamGSBG()).start();
 		new Thread(new TimeForPoints()).start();
 	}
 
@@ -177,7 +178,8 @@ public class TwitchChat extends PircBot {
 						+ "!leaderboard : show the top 5 point holders | "
 						+ "!flex : attempt to show off your points in chat | "
 						+ "!give XX YY : give user XX YY points | "
-						+ "!contact : get email for contact about the bot");
+						+ "!contact : get email for contact about the bot | "
+						+ "!buygsbg XX : put image from XX URL as greenscreen background");
 			}
 			
 			if (message.equalsIgnoreCase("!points")) {
@@ -255,6 +257,13 @@ public class TwitchChat extends PircBot {
 					StreamEmote.add(sender, message);
 			}
 			
+			if (message.startsWith("!buygsbg ")) {
+				if(!PlayersHandler.playing(sender))
+					privateMessage(sender, sender + ", first you gotta !join.");
+				else
+					StreamGSBG.add(sender, message);
+			}
+			
 			if (message.startsWith("!give ")) {
 				try {
 					String[] pieces = message.split(" ");
@@ -314,7 +323,7 @@ public class TwitchChat extends PircBot {
 					player = player.toLowerCase();
 					privateMessage(sender, player + " has " + PlayersHandler.getPoints(player)
 							+ " points.");
-				}catch(Exception e) {
+				} catch(Exception e) {
 					privateMessage(sender, "Failed to check...");
 					System.err.println(e);
 				}

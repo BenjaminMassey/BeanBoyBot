@@ -7,20 +7,16 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
 public class StreamEmote implements Runnable{
 	
 	private static ArrayList<String> messages = new ArrayList<String>();
-	private static File soundEffect = new File("MessageSound.wav");
 	
 	public void run() {
 		while(TwitchChat.connected) {
 			if(messages.size() > 0) {
 				String message = messages.get(0);
 				messages.remove(0);
-				playSound(soundEffect, false);
+				StreamMessage.playSound();
 				
 				FileHandler.writeToFile("StreamMessage", message);
 				try {
@@ -91,19 +87,6 @@ public class StreamEmote implements Runnable{
 		if(emotes.contains(emote)) {
 			System.out.println("Attempted bot emote from " + name + " with " + emote);
 			messages.add(name + ": " + emote);
-		}
-	}
-	
-	// Credit to: https://www.youtube.com/watch?v=QVrxiJyLTqU for help
-	private static void playSound(File soundFile, boolean synchronous) {
-		try {
-			Clip clip = AudioSystem.getClip();
-			clip.open(AudioSystem.getAudioInputStream(soundFile));
-			clip.start();
-			if(synchronous)
-				Thread.sleep(clip.getMicrosecondLength() / 1000);
-		}catch(Exception e) {
-			System.err.println("Error with sound: " + e);
 		}
 	}
 }
