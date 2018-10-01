@@ -243,8 +243,8 @@ public class GUIHandler extends JFrame {
         jp.add(denyButton);
         denyButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
-        		if (StreamGSBG.images.size() > 0)
-        			StreamGSBG.images.remove(0);
+        		if (StreamImage.images.size() > 0)
+        			StreamImage.images.remove(0);
         		if (StreamMessage.messages.size() > 0)
         			StreamMessage.messages.remove(0);
         	}
@@ -254,7 +254,8 @@ public class GUIHandler extends JFrame {
         jp.add(approvalButton);
         approvalButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
-        		approval = true;
+        		if (StreamImage.images.size() > 0)
+        			approval = true;
         	}
         });
         
@@ -297,8 +298,8 @@ public class GUIHandler extends JFrame {
         jp.add(denyButton);
         denyButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
-        		if (StreamGSBG.images.size() > 0)
-        			StreamGSBG.images.remove(0);
+        		if (StreamImage.images.size() > 0)
+        			StreamImage.images.remove(0);
         		if (StreamMessage.messages.size() > 0)
         			StreamMessage.messages.remove(0);
         	}
@@ -308,7 +309,8 @@ public class GUIHandler extends JFrame {
         jp.add(approvalButton);
         approvalButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
-        		approval = true;
+        		if (StreamImage.images.size() > 0)
+        			approval = true;
         	}
         });
         

@@ -41,7 +41,7 @@ public class TwitchChat extends PircBot {
 		bot.joinChannel(channel);
 		new Thread(new StreamMessage()).start();
 		new Thread(new StreamEmote()).start();
-		new Thread(new StreamGSBG()).start();
+		new Thread(new StreamImage()).start();
 		new Thread(new TimeForPoints()).start();
 	}
 
@@ -179,7 +179,7 @@ public class TwitchChat extends PircBot {
 						+ "!flex : attempt to show off your points in chat | "
 						+ "!give XX YY : give user XX YY points | "
 						+ "!contact : get email for contact about the bot | "
-						+ "!buygsbg XX : put image from XX URL as greenscreen background");
+						+ "!buyimage XX : put image from XX URL in image queque");
 			}
 			
 			if (message.equalsIgnoreCase("!points")) {
@@ -257,11 +257,11 @@ public class TwitchChat extends PircBot {
 					StreamEmote.add(sender, message);
 			}
 			
-			if (message.startsWith("!buygsbg ")) {
+			if (message.startsWith("!buyimage ")) {
 				if(!PlayersHandler.playing(sender))
 					privateMessage(sender, sender + ", first you gotta !join.");
 				else
-					StreamGSBG.add(sender, message);
+					StreamImage.add(sender, message);
 			}
 			
 			if (message.startsWith("!give ")) {

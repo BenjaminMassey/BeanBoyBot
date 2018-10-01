@@ -2,7 +2,6 @@ package bbb;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,8 +9,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-public class StreamGSBG implements Runnable{
-	// Handles getting images from users to put as a background for a greenscreen
+public class StreamImage implements Runnable{
+	// Handles getting images from users
 	
 	private static int cost = 1000;
 	public static ArrayList<String> images = new ArrayList<String>();
@@ -33,9 +32,9 @@ public class StreamGSBG implements Runnable{
 					    Path currentRelativePath = Paths.get("");
 					    dirPath = currentRelativePath.toAbsolutePath().toString();
 				    }
-				    File imageFile = new File(dirPath + "/gsbg/current.png");
+				    File imageFile = new File(dirPath + "/image.png");
 				    ImageIO.write(image, "png", imageFile);
-				} catch (IOException e) {
+				} catch (Exception e) {
 					System.err.println(e);
 					if (dirPath != null)
 						System.err.println(dirPath);
@@ -53,14 +52,14 @@ public class StreamGSBG implements Runnable{
 	
 	public static void add(String user, String message) {
 		if(PlayersHandler.getPoints(user) >= cost) {
-			// message looks like "!buygsbg https://www.imgur.com/meme.jpg"
-			String rawURL = message.substring(9);
+			// message looks like "!buyimage https://www.imgur.com/meme.jpg"
+			String rawURL = message.substring(10);
 			if(rawURL.contains("http://") || rawURL.contains("https://")) {
 				PlayersHandler.removePoints(user, cost);
-				System.out.println("Attempted GSBG from " + user + " with " + message.substring(9));
-				images.add(message.substring(9));
-				TwitchChat.outsideMessage(user + " added " + message.substring(9));
-				TwitchChat.outsidePM(user, "Your background has been added "+
+				System.out.println("Attempted image from " + user + " with " + message.substring(10));
+				images.add(message.substring(10));
+				TwitchChat.outsideMessage(user + " added " + message.substring(10));
+				TwitchChat.outsidePM(user, "Your image has been added "+
 							"to the queue, " + user + ".");
 			}
 			else {
@@ -71,8 +70,8 @@ public class StreamGSBG implements Runnable{
 			
 		}
 		else {
-			TwitchChat.outsideMessage("Sorry, " + user + ", but it "+
-						"it costs " + cost + " points to buy a background.");
+			TwitchChat.outsidePM(user, "Sorry, " + user + ", but it "+
+						"it costs " + cost + " points to buy an image.");
 		}
 	}
 }
