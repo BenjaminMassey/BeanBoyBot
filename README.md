@@ -85,15 +85,19 @@ Google should make all that fairly easy.
 ## Images
 
 Image of the bot's interface in non config mode:
+
 ![Image of the bot's interface in non config mode](https://i.imgur.com/WCEBmxZ.png)
 
 Image of the bot's interface in config mode:
+
 ![Image of the bot's interface in config mode](https://i.imgur.com/liPUP0r.png)
 
 Image of the bot's output for a stream:
+
 ![Image of the bot's output for a stream](https://i.imgur.com/cv8FBom.png)
 
 Full screenshot of bot on stream:
+
 ![Full screenshot of bot on stream](https://i.imgur.com/yNPHfvO.jpg)
 
 ## Contact
