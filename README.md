@@ -1,7 +1,7 @@
 # BeanBoyBot
 
 -------------------------------------------------
-Copyright 2018 Benjamin Massey
+Copyright 2019 Benjamin Massey
 -------------------------------------------------
 
 ## Summary
@@ -10,30 +10,28 @@ This is a bot for streams on Twitch.tv that runs a game integrated with the stre
 
 Here's a rundown of the basics of the game:
 
-All throughout a given run, that run will have a certain price associated with it.
+- All throughout a given run, that run will have a certain price associated with it.
 
-This price is gathered through a calculation on the quality of the run -
+- This price is gathered through a calculation on the quality of the run -
 if the run is going well, the price will go up, and vice versa.
 
-At any point in the run, you can either buy or sell the run at the given price.
+- At any point in the run, you can either buy or sell the run at the given price.
 
-The best way to think of this is like a stock - you can either invest in the run or not.
+- The best way to think of this is like a stock - you can either invest in the run or not.
 
-Just like a stock, you're gonna want to buy low and sell high as best you can.
+- Just like a stock, you're gonna want to buy low and sell high as best you can.
 
-However, and here is where the major "game" portion comes in,
+- However, and here is where the major "game" portion comes in,
 there are two conditions where the run will auto sell to every investor:
 either a reset or a personal best.
 
-If the runner achieves a personal best, then congrats, you invested into a successful run!
-
+- If the runner achieves a personal best, then congrats, you invested into a successful run!
 You'll be awarded double the price at the end if it is a PB: should be a hefty sum
 
-Much more likely, an investor will run into a reset (such is life).
-
+- Much more likely, an investor will run into a reset (such is life).
 On a reset, the run will be sold out from under the investors for only 75% of the current price.
 
-This makes holding onto a run risky, and forces the viewers to pay attention and try to predict futures based on their observations.
+- This makes holding onto a run risky, and forces the viewers to pay attention and try to predict futures based on their observations.
 
 There are some other smaller parts of the game,
 such as dividends which encourage investors to stay invested,
@@ -42,9 +40,7 @@ but that is the basic concept of the game.
 ## Viewer Interaction
 
 The whole point of this is to increase viewer interaction, and of course you need to reward that interaction with incentives.
-
 Every user starts out with 100 points, and can build up points through buying and selling.
-
 Those points can then be used for certain rewards.
 
 Some rewards I've experimented with, and are currently available using this bot:
@@ -55,24 +51,11 @@ Some rewards I've experimented with, and are currently available using this bot:
 - Ability to "flex" with a chat message
 - Buying a background image for a green screen
 - Buying an image to put on stream
-- And many more random things I've done manually...
-
-
-## Quotes
-
-While I probably should have separated it a bit, this bot build also includes a pretty standard system for storing quotes.
-
-Anyone can add a quote with !addquote XX, view a random quote with !quote or a specific one with !quote XX.
-
-The quotes are very basically handled - just plain text files. They're backed up every couple of quotes.
-
-Feel free to ignore this part of the bot if you want, and it will probably be separated in the future.
 
 ## Code
 
-First thing to make clear: this is very much still a work in progress, and you should not expect it to be easy to use or smooth or even really fully working.
-I have not yet pushed any real "release" version, and as far as I know I'm the only one to use it on stream ever.
-I do my best to keep everything safe and tidy, but use at your own risk and sanity.
+This project is currently written entirely in Java.
+It has been written mostly by me, with some additions as seen in the "Thank Yous" section.
 
 This project is all written in Java, using Pircbot as base:
 http://www.jibble.org/pircbot.php
