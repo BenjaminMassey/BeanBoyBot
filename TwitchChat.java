@@ -55,23 +55,6 @@ public class TwitchChat extends PircBot {
 		
 		// Here are the commands that should be taken action for
 
-		if (message.startsWith("!addquote ")) {
-			QuotesHandler.addQuote(message);
-			messageChat("Added your quote! (#" + 
-					(FileHandler.getFileLength("Quotes") - 1)+ ")");
-		}
-
-		if (message.startsWith("!quote"))
-			messageChat(QuotesHandler.getQuote(message));
-
-		if (message.startsWith("!delquote ")) {
-			boolean deleted = QuotesHandler.delQuote(message);
-			if (deleted)
-				messageChat("Deleted!");
-			else
-				messageChat("Failed to delete... D:");
-		}
-
 		if (message.equalsIgnoreCase("!SplitGame")) {
 			messageChat("Now you can play a game in chat with the speedrun! "
 					+ "The run acts like a stock. First step is to enter the "
