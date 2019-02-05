@@ -25,7 +25,7 @@ public class FileHandler {
 	
 	public static void checkForFilesAndCreateIfNone() throws IOException {
 		checkFileAndCreateIfNone("Quotes");
-		checkFileAndCreateIfNone("SplitGame");
+		checkFileAndCreateIfNone("Players");
 		checkFileAndCreateIfNone("Accounts");
 		checkFileAndCreateIfNone("Output");
 		checkFileAndCreateIfNone("StreamMessage");
