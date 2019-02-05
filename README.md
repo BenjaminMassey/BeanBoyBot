@@ -11,31 +11,18 @@ This is a bot for streams on Twitch.tv that runs a game integrated with the stre
 Here's a rundown of the basics of the game:
 
 - All throughout a given run, that run will have a certain price associated with it.
-
-- This price is gathered through a calculation on the quality of the run -
+This price is gathered through a calculation on the quality of the run -
 if the run is going well, the price will go up, and vice versa.
 
-- At any point in the run, you can either buy or sell the run at the given price.
+- At any point in the run, a viewer can either buy or sell the run at the given price.
 
-- The best way to think of this is like a stock - you can either invest in the run or not.
+- There are also two conditions where the run will auto sell to every investor.
 
-- Just like a stock, you're gonna want to buy low and sell high as best you can.
+- If the runner achieves a personal best, then the run will be auto sold at 2x its ending price.
 
-- However, and here is where the major "game" portion comes in,
-there are two conditions where the run will auto sell to every investor:
-either a reset or a personal best.
+- If the runner does a reset, then the run will be auto sold for 75% of its current price.
 
-- If the runner achieves a personal best, then congrats, you invested into a successful run!
-You'll be awarded double the price at the end if it is a PB: should be a hefty sum
-
-- Much more likely, an investor will run into a reset (such is life).
-On a reset, the run will be sold out from under the investors for only 75% of the current price.
-
-- This makes holding onto a run risky, and forces the viewers to pay attention and try to predict futures based on their observations.
-
-There are some other smaller parts of the game,
-such as dividends which encourage investors to stay invested,
-but that is the basic concept of the game.
+This creates a game of the viewer treating the game like a stock, and paying attention to the runs in order to dodge resets and maximize profit.
 
 ## Viewer Interaction
 
@@ -57,10 +44,9 @@ Some rewards I've experimented with, and are currently available using this bot:
 This project is currently written entirely in Java.
 It has been written mostly by me, with some additions as seen in the "Thank Yous" section.
 
-This project is all written in Java, using Pircbot as base:
+This project uses Pircbot as base:
 http://www.jibble.org/pircbot.php
-
-Make sure to check out pircbot, it makes a lot of the silly Twitch interaction a whole lot easier.
+Make sure to check it out, it makes a lot of the silly Twitch interaction a whole lot easier.
 
 You're going to need to have your own account setup to act as the Twitch bot, and figure out how to get an API key and whatnot for it.
 Google should make all that fairly easy.
@@ -93,6 +79,6 @@ I also stream at https://www.twitch.tv/BeanSSBM and use this bot when I speedrun
 
 Shoutout to Dark_Tenka for helping out with certain parts of the bot, including the majority of the dividends system - I really appreciate his help <3.
 
-Shoutouts to my various viewers for helping test the bot a lot, which admittedly has had MANY problems over its lifetime - they've got great ideas too <3.
+Shoutouts to my various viewers for helping test the bot - they've got some great ideas <3.
 
 Shoutouts to Clint Stevens for sparking this idea in my head, even though it was mainly his chat and it was just a barely related meme <3.
