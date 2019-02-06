@@ -24,7 +24,6 @@ public class FileHandler {
 	public static String nl = System.getProperty("line.separator");
 	
 	public static void checkForFilesAndCreateIfNone() throws IOException {
-		checkFileAndCreateIfNone("Quotes");
 		checkFileAndCreateIfNone("Players");
 		checkFileAndCreateIfNone("Accounts");
 		checkFileAndCreateIfNone("Output");
