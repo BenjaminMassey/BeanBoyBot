@@ -78,7 +78,9 @@ I also stream at https://www.twitch.tv/BeanSSBM and use this bot when I speedrun
 ## Dependencies
 
 org.jibble.pircbot
+
 com.hierynomus:sshj
+
 org.slf4j:slf4j-log4j12
 
 ## Thank Yous
