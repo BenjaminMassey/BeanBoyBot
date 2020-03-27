@@ -75,6 +75,12 @@ Any and all questions should be directed to benjamin.w.massey@gmail.com - I'd lo
 
 I also stream at https://www.twitch.tv/BeanSSBM and use this bot when I speedrun - feel free to just hop in and ask questions, or send me a whisper.
 
+## Dependencies
+
+org.jibble.pircbot
+com.hierynomus:sshj
+org.slf4j:slf4j-log4j12
+
 ## Thank Yous
 
 Shoutout to Dark_Tenka for helping out with certain parts of the bot, including the majority of the dividends system - I really appreciate his help <3.
