@@ -1,7 +1,7 @@
 # BeanBoyBot
 
 -------------------------------------------------
-Copyright 2019 Benjamin Massey
+Copyright 2020 Benjamin Massey
 -------------------------------------------------
 
 ## Summary

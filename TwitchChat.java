@@ -7,7 +7,7 @@ import org.jibble.pircbot.*;
 public class TwitchChat extends PircBot {
 
 	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
+	// Copyright 2020 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 
 	// This class handles actually reading from and talking to Twitch Chat
@@ -43,6 +43,7 @@ public class TwitchChat extends PircBot {
 		new Thread(new StreamEmote()).start();
 		new Thread(new StreamImage()).start();
 		new Thread(new TimeForPoints()).start();
+		new Thread(new ServerUpdate()).start();
 	}
 
 	public static void deactivate() throws IOException, IrcException {

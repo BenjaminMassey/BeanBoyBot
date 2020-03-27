@@ -7,7 +7,7 @@ import javax.swing.*;
 public class GUIHandler extends JFrame {
 	
 	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
+	// Copyright 2020 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 	
 	private static final long serialVersionUID = 1L;

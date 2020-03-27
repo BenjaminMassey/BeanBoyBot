@@ -9,7 +9,7 @@ import java.io.BufferedReader;
 public class LiveSplitHandler {
 
 	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
+	// Copyright 2020 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 
 	// This class handles interacting with the LiveSplit application using its
