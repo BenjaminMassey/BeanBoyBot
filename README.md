@@ -6,7 +6,7 @@ Copyright 2020 Benjamin Massey
 
 ## Summary
 
-This is a bot for streams on Twitch.tv that runs a game integrated with the streamer's speeedrun.
+This is a bot for streams on Twitch.tv that runs a game integrated with the streamer's speedrun.
 
 Here's a rundown of the basics of the game:
 
