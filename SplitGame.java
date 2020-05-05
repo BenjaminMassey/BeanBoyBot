@@ -21,6 +21,7 @@ public class SplitGame extends TimerTask {
 
 	private static int cost; // How much a run will cost at the moment
 	private static Timer timer;
+	private static boolean pbMessage; // Toggle for special PB message
 
 	private static int dividend; // Dividend value
 	
@@ -38,15 +39,31 @@ public class SplitGame extends TimerTask {
 				cost = (int) Math.round(cost * 0.75);
 				PointsGameHandler.sellAll();
 				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
+				if (ConfigValues.cheekyEmotes)
+					StreamEmote.botEmote("RIPRUN", "FeelsBadMan");
 			}
 			if (checkPB()) {
 				cost = (int) Math.round(cost * 2);
 				PointsGameHandler.sellAll();
 				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
+				pbMessage = true;
+				if (ConfigValues.cheekyEmotes)
+					StreamEmote.botEmote("FINALLYPB", "FeelsGoodMan");
 			}
 			setCost();
 			updatePB();
-			output();
+			if (pbMessage) {
+				FileHandler.writeToFile("Output", "Congrats on\r\nthe PB!");
+				if (ct != pb) { pbMessage = false; }
+			}
+			else {
+				output();
+			}
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				System.err.println("Oops: " + e);;
+			}
 		}
 		else {
 			FileHandler.writeToFile("Output", "SplitGame is\r\nnot on!");
@@ -61,6 +78,7 @@ public class SplitGame extends TimerTask {
 	public static void start() {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
+		pbMessage = false;
 		ConfigValues.dividendRate = 0.5; // 0 means disabled
 		TimerTask splitStocks = new SplitGame();
 		TimeForPoints.start();
@@ -197,6 +215,10 @@ public class SplitGame extends TimerTask {
 		return cost;
 	}
 	
+	public static double getTime() {
+		return ct;
+	}
+	
 	public static void gamble(String player, String message) {
 		// Have a player randomly be given or randomly taken away a given amount
 		
@@ -221,18 +243,21 @@ public class SplitGame extends TimerTask {
 			double result = rng.nextDouble();
 			double chance = 0.5;
 			
+			// Gamble amount for it to display in chat
+			double cap = PlayersHandler.getPoints(player) * 0.5;
+			if (cap < 100)
+				cap = 100;
+			
 			if(result < chance) {
-				if(amount < 1000)
-					TwitchChat.outsidePM(player, player + ", you won " + amount + " points! PogChamp");
-				else
-					TwitchChat.outsideMessage(player + ", you won " + amount + " points! PogChamp");
+				TwitchChat.outsidePM(player, player + ", you won " + amount + " points! PogChamp");
+				if(amount > cap)
+					TwitchChat.outsideMessage(player + " won " + amount + " points! PogChamp");
 				PlayersHandler.addPoints(player, amount);
 			}
 			else {
-				if (amount < 1000)
-					TwitchChat.outsidePM(player, player + ", you lost " + amount + " points... FeelsBadMan");
-				else
-					TwitchChat.outsideMessage(player + ", you lost " + amount + " points... FeelsBadMan");
+				TwitchChat.outsidePM(player, player + ", you lost " + amount + " points... FeelsBadMan");
+				if (amount > cap)
+					TwitchChat.outsideMessage(player + " lost " + amount + " points... FeelsBadMan");
 				PlayersHandler.removePoints(player, amount);
 			}
 		}

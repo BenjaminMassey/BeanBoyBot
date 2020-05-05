@@ -7,7 +7,7 @@ import bbb.PlayersHandler.Player;
 public class PointsGameHandler {
 
 	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
+	// Copyright 2020 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 
 	public static boolean buyRun(String newName) {

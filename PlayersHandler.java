@@ -6,8 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
-import bbb.PlayersHandler.Player;
-
 public class PlayersHandler {
 
 	public static class Player {
@@ -74,7 +72,7 @@ public class PlayersHandler {
 	public static void saveAll() {
 
 		try {
-			File file = new File("SplitGame.txt");
+			File file = new File("Players.txt");
 			FileWriter fw = new FileWriter(file, false);
 			for (int i = 0; i < players.size(); i++) {
 				fw.write(players.get(i).name + ":" + players.get(i).points + ":" + players.get(i).state + ":"
@@ -92,7 +90,7 @@ public class PlayersHandler {
 	public static void loadAll() {
 
 		try {
-			File file = new File("SplitGame.txt");
+			File file = new File("Players.txt");
 
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);

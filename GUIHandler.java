@@ -3,13 +3,11 @@ package bbb;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class GUIHandler extends JFrame {
 	
 	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
+	// Copyright 2020 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 	
 	private static final long serialVersionUID = 1L;
@@ -21,6 +19,8 @@ public class GUIHandler extends JFrame {
 	private static JButton startButtonConfig;
 	private static JButton startButtonNonConfig;
 	
+	public static boolean approval = false;
+	
 	public static void createWindow(String name, String icon) {
 		// Create and set up the window
         frame = new GUIHandler(name);
@@ -30,7 +30,7 @@ public class GUIHandler extends JFrame {
         frame.setIconImage(ico.getImage());
         frame.pack();
         frame.setVisible(true);
-        frame.setSize(250,150);
+        frame.setSize(250,225);
 	}
 	
 	public GUIHandler(String name) {
@@ -75,27 +75,36 @@ public class GUIHandler extends JFrame {
 		JButton startButton = new JButton("Start");
         startButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
+        		// Stop the bot
         		if(TwitchChat.connected) {
         			try{
         				TwitchChat.deactivate();
         				PlayersHandler.saveAll();
+        				startButtonConfig.setText("Start");
+            			startButtonNonConfig.setText("Start");
         			}catch(Exception e) {
         				System.err.println("Oops: " + e);
         			}
-        			startButtonConfig.setText("Start");
-        			startButtonNonConfig.setText("Start");
         		}
+        		// Start the bot
         		else {
         			try{
-        				AccountsManager.updateAll();
-        				LiveSplitHandler.initialize();
-        				SplitGame.start();
-        				TwitchChat.initialize();
+        				if (ConfigValues.stocksOn)
+        					LiveSplitHandler.initialize();
+        				try{
+            				AccountsManager.updateAll();
+            				SplitGame.start();
+            				TwitchChat.initialize();
+            				startButtonConfig.setText("Stop");
+                			startButtonNonConfig.setText("Stop");
+            			}catch(Exception e) {
+            				System.err.println("Error: " + e);
+            				JOptionPane.showMessageDialog(null,"Failed to initialize...perhaps no internet?");
+            			}
         			}catch(Exception e) {
-        				System.err.println("Oops: " + e);
+        				System.err.println("Error: " + e);
+        				JOptionPane.showMessageDialog(null,"Could not connect to LiveSplit - make sure you started the server!");
         			}
-        			startButtonConfig.setText("Stop");
-        			startButtonNonConfig.setText("Stop");
         		}
         	}
         });
@@ -105,7 +114,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(16,1));
+		jp.setLayout(new GridLayout(20,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -117,7 +126,7 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,150);
+        		frame.setSize(250,225);
         	}
         });
 		
@@ -183,6 +192,21 @@ public class GUIHandler extends JFrame {
 			}
         });
         
+     // Checkbox for toggling cheeky emotes
+        JCheckBox cemotes = new JCheckBox("Cheeky Emotes On");
+        cemotes.setSelected(ConfigValues.cheekyEmotes);
+        jp.add(cemotes);
+        cemotes.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+		            ConfigValues.cheekyEmotes = true;
+		        } else {
+		            ConfigValues.cheekyEmotes = false;
+		        }
+				ConfigValues.writeValues();
+			}
+        });
+        
         // Entry to set the score multiplier
         JTextField scoreMultiplier = new JTextField(20);
         scoreMultiplier.setText(Double.toString(ConfigValues.scoreMultiplier));
@@ -215,6 +239,30 @@ public class GUIHandler extends JFrame {
         blank = new JLabel("");
         jp.add(blank);
         
+        JButton denyButton = new JButton("Deny quequed item");
+        jp.add(denyButton);
+        denyButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+        		if (StreamImage.images.size() > 0)
+        			StreamImage.images.remove(0);
+        		if (StreamMessage.messages.size() > 0)
+        			StreamMessage.messages.remove(0);
+        	}
+        });
+        
+        JButton approvalButton = new JButton("Approve quequed item");
+        jp.add(approvalButton);
+        approvalButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+        		if (StreamImage.images.size() > 0)
+        			approval = true;
+        	}
+        });
+        
+        // Blank space for spacing
+        blank = new JLabel("");
+        jp.add(blank);
+        
         // Button that toggles the bot on and off
         startButtonConfig = generateStartButton();
         jp.add(startButtonConfig);
@@ -226,7 +274,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateNonConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(4,1));
+		jp.setLayout(new GridLayout(7,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -238,12 +286,36 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,450);
+        		frame.setSize(250,550);
         	}
         });
         
         // Blank space for spacing
         JLabel blank = new JLabel("");
+        jp.add(blank);
+        
+        JButton denyButton = new JButton("Deny quequed item");
+        jp.add(denyButton);
+        denyButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+        		if (StreamImage.images.size() > 0)
+        			StreamImage.images.remove(0);
+        		if (StreamMessage.messages.size() > 0)
+        			StreamMessage.messages.remove(0);
+        	}
+        });
+        
+        JButton approvalButton = new JButton("Approve quequed item");
+        jp.add(approvalButton);
+        approvalButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+        		if (StreamImage.images.size() > 0)
+        			approval = true;
+        	}
+        });
+        
+        // Blank space for spacing
+        blank = new JLabel("");
         jp.add(blank);
         
         // Button that toggles the bot on and off

@@ -15,7 +15,7 @@ import java.nio.file.StandardCopyOption;
 public class FileHandler {
 
 	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
+	// Copyright 2020 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 
 	// Interacts with text files in terms of reading, writing and other general file
@@ -24,8 +24,7 @@ public class FileHandler {
 	public static String nl = System.getProperty("line.separator");
 	
 	public static void checkForFilesAndCreateIfNone() throws IOException {
-		checkFileAndCreateIfNone("Quotes");
-		checkFileAndCreateIfNone("SplitGame");
+		checkFileAndCreateIfNone("Players");
 		checkFileAndCreateIfNone("Accounts");
 		checkFileAndCreateIfNone("Output");
 		checkFileAndCreateIfNone("StreamMessage");

@@ -3,7 +3,7 @@ package bbb;
 public class AccountsManager {
 	
 	// A part of BeanBoyBot
-	// Copyright 2017 Ben Massey
+	// Copyright 2020 Ben Massey
 	// https://github.com/BenjaminMassey/BeanBoyBot
 	
 	private static String chatChannel;
