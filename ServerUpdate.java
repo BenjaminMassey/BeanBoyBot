@@ -15,7 +15,10 @@ import java.io.IOException;
 
 public class ServerUpdate implements Runnable{
 
+    private static SSHClient ssh;
+
     public void run() {
+        connectSSH();
         while(TwitchChat.connected) {
             try {
                 PlayersHandler.saveAll();
@@ -28,28 +31,45 @@ public class ServerUpdate implements Runnable{
     }
 
     // NOTE: All of the stuff is fairly hardcoded for right now, since I'm lazy
-    // "www.speedrunstocks.com" directs to the IP of my AWS EC2 instance
-    // "ubuntu" is simply the default username for such an instance
-    // "BeanBotAWS.ppk" is the private key I use to login
-    // "/home/ubuntu/BeanQuoteBot/" is the directory of the website
-    public static void updateFile(String filename) throws IOException{
-        BasicConfigurator.configure();
-        SSHClient ssh = new SSHClient();
-        ssh.addHostKeyVerifier(new PromiscuousVerifier());
-        ssh.loadKnownHosts();
-        ssh.connect("www.speedrunstocks.com");
+    // "local.speedrunstocks.com" directs to the IP of my server (locally)
+    // "ben" is the username on my server
+    // "key.ppk" is the private key I use for ssh auth
+    // "/home/ben/Desktop/SpeedrunStocksServer" is the directory of the website
 
+    private static void connectSSH() {
         try {
-            String username = "ubuntu";
+            BasicConfigurator.configure();
+            ssh = new SSHClient();
+            ssh.addHostKeyVerifier(new PromiscuousVerifier());
+            ssh.connect("local.speedrunstocks.com", 22);
+            //ssh.connect("192.168.x.x", 22);
+            //ssh.authPassword("ben", "xxxx");
 
-            File privateKey = new File("BeanBotAWS.ppk");
+            File privateKey = new File("key.ppk");
             KeyProvider keys = ssh.loadKeys(privateKey.getPath());
-            ssh.authPublickey(username, keys);
+            ssh.authPublickey("ben", keys);
 
             ssh.useCompression();
-            ssh.newSCPFileTransfer().upload(new FileSystemFile(filename), "/home/ubuntu/BeanQuoteBot/");
-        } finally {
+        }
+        catch (Exception e) {
+            System.err.println("ServerUpdate.connectSSH() error : " + e.toString());
+        }
+    }
+
+    private static void updateFile(String filename) throws IOException{
+        try {
+            ssh.newSCPFileTransfer().upload(new FileSystemFile(filename), "/home/ben/Desktop/SpeedrunStocksServer");
+        } catch (Exception e) {
+            System.err.println("ServerUpdate.updateFile(1) error : " + e.toString());
+        }
+    }
+
+    public static void finish() {
+        try {
             ssh.disconnect();
+            ssh.close();
+        } catch (Exception e) {
+            System.err.println("ServerUpdate.finish() error : " + e.toString());
         }
     }
 }
