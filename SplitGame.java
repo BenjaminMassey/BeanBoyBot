@@ -292,7 +292,7 @@ public class SplitGame extends TimerTask {
 			else if (timeStrArray.length == 2) { // XX:XX.XX
 				time = (Math.abs(Double.parseDouble(timeStrArray[0])) * 60) + Math.abs(Double.parseDouble(timeStrArray[1]));
 			} else if(timeStrArray.length == 3){ // X:XX:XX.XX Why not add this I figure .. might be important down the line
-				time = (Math.abs(Double.parseDouble(timeStrArray[0])) * 360) + (Math.abs(Double.parseDouble(timeStrArray[1])) * 60) + Math.abs(Double.parseDouble(timeStrArray[2]));
+				time = (Math.abs(Double.parseDouble(timeStrArray[0])) * 3600) + (Math.abs(Double.parseDouble(timeStrArray[1])) * 60) + Math.abs(Double.parseDouble(timeStrArray[2]));
 			} else {
 				time = 0;
 				System.err.println("DID NOT PARSE '" + givenTime + "' CORRECTLY");
