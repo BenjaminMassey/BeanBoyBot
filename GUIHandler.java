@@ -82,6 +82,7 @@ public class GUIHandler extends JFrame {
         				PlayersHandler.saveAll();
         				startButtonConfig.setText("Start");
             			startButtonNonConfig.setText("Start");
+            			ServerUpdate.finish();
         			}catch(Exception e) {
         				System.err.println("Oops: " + e);
         			}
