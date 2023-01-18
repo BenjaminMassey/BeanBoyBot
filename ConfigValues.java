@@ -7,12 +7,15 @@ public class ConfigValues {
 	public static double scoreMultiplier;
 	public static double dividendRate;
 	public static boolean cheekyEmotes;
+
+	public static double chokeRate;
 	
 	public static void writeValues() {
 		FileHandler.writeToFile("Config", "StocksOn:" + Boolean.toString(stocksOn) + FileHandler.nl
 								+ "ScoreMultiplier:" + Double.toString(scoreMultiplier) + FileHandler.nl
 								+ "DividendRate:" + Double.toString(dividendRate) + FileHandler.nl
-								+ "CheekyEmotes:" + Boolean.toString(cheekyEmotes));
+								+ "CheekyEmotes:" + Boolean.toString(cheekyEmotes) + FileHandler.nl
+								+ "ChokeRate:" + Double.toString(chokeRate) + FileHandler.nl);
 	}
 	
 	public static void getValues() {
@@ -21,11 +24,13 @@ public class ConfigValues {
 			scoreMultiplier = Double.parseDouble(FileHandler.readFromFile("Config", 1).split(":")[1]);
 			dividendRate = Double.parseDouble(FileHandler.readFromFile("Config", 2).split(":")[1]);
 			cheekyEmotes = Boolean.parseBoolean(FileHandler.readFromFile("Config", 3).split(":")[1]);
+			chokeRate = Double.parseDouble(FileHandler.readFromFile("Config", 4).split(":")[1]);
 		}
 		else {
 			stocksOn = true;
 			scoreMultiplier = 10.0;
 			dividendRate = 5.0;
+			chokeRate = 0.75;
 			cheekyEmotes = true;
 			writeValues();
 		}

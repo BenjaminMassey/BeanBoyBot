@@ -24,8 +24,12 @@ public class SplitGame extends TimerTask {
 	private static boolean pbMessage; // Toggle for special PB message
 
 	private static int dividend; // Dividend value
+
+
+	private static int chokes; // number of chokes left in the run
 	
 	private static ArrayList<String> ignoreSplits; // Ignore splits of any name in this ArrayList for dividend rewards (useful specifically with Loading Splits in TTT)
+	private static ArrayList<String> chokeSplits;
 
 	public void run() {
 		if(ConfigValues.stocksOn) {
@@ -84,8 +88,10 @@ public class SplitGame extends TimerTask {
 		TimeForPoints.start();
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(splitStocks, 0, 1000);
-		ignoreSplits = new ArrayList<String>(); // Make sure to leave this though
+		ignoreSplits = bbb.FileHandler.readEntireFile("IgnoreSplits");
 		ignoreSplits.add("-Loading"); // This is specifically for me right now, don't know if you can use it. If you can't simply remove this line
+		chokeSplits = bbb.FileHandler.readEntireFile("Chokes");
+		chokes = bbb.FileHandler.getFileLength("Chokes");
 	}
 
 	public static void stop() {
@@ -120,6 +126,9 @@ public class SplitGame extends TimerTask {
 				
 				if(!ignoreSplits.contains(buffer)) // Check if this split is in the ignore list, if so dont reward Dividends
 					rewardDividends(newSplit);
+
+				if(chokeSplits.contains(buffer)) // Check if the previous split was a "choke split", if so reduce the "chokes" by 1
+					chokes--;
 			}
 			PlayersHandler.setBeginSplit(newSplit); // Update the begin split if you are invested at this point in time
 			System.out.println("New Split");
@@ -206,8 +215,8 @@ public class SplitGame extends TimerTask {
 	}
 
 	private static void setCost() {
-		if (!LiveSplitHandler.getCurrentTimerPhase().equals("Ended")) { // Fix for calculating a high cost even if u finish a run poorly
-			cost = (int) Math.round(v * ConfigValues.scoreMultiplier);
+		if (!LiveSplitHandler.getCurrentTimerPhase().equals("Ended")) { // Fix for calculating a high cost even if you finish a run poorly
+			cost = (int) Math.round(v * ConfigValues.scoreMultiplier * Math.pow(ConfigValues.chokeRate, chokes));
 		}
 	}
 
