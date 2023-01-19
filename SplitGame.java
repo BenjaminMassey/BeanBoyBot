@@ -125,7 +125,7 @@ public class SplitGame extends TimerTask {
 			{
 				String buffer = LiveSplitHandler.getPreviousSplitName();
 				
-				if(!ignoreSplits.contains(buffer) || buffer.startsWith("-")) // Check if this split is in the ignore list, if so don't reward Dividends.
+				if(!(ignoreSplits.contains(buffer) || buffer.startsWith("-"))) // Check if this split is in the ignore list, if so don't reward Dividends.
 					rewardDividends(newSplit);								 // Edited it to automatically ignore subsplits, so it doesn't reward dividends every 15 seconds for my runs -DNVIC.
 
 				if(chokeSplits.contains(buffer)) // Check if the previous split was a "choke split", if so reduce the "chokes" by 1
