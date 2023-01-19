@@ -22,13 +22,36 @@ public class PointsGameHandler {
 					players.get(i).investment = SplitGame.getCost();
 					PlayersHandler.saveAll();
 					return true;
+				} else if (players.get(i).points - SplitGame.getCost() > 0 && players.get(i).state == 3) { // buying after a short
+					players.get(i).points -= SplitGame.getCost();
+					players.get(i).state = 0;
+					players.get(i).investment = 0;
+					PlayersHandler.saveAll();
+					return true;
 				}
 			}
 		}
 
 		return false;
 	}
+	public static boolean shortRun(String newName) {//separate function from sell because I don't want people shorting accidentally.
 
+		ArrayList<Player> players = PlayersHandler.getPlayers();
+
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).name.equals(newName)) {
+				if (players.get(i).state == 0) {
+					players.get(i).points += SplitGame.getCost();
+					players.get(i).state = 3; // used 3 since 2 is going to be used for delayed selling
+					players.get(i).investment = -SplitGame.getCost();
+					PlayersHandler.saveAll();
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 	public static boolean sellRun(String newName) {
 
 		ArrayList<Player> players = PlayersHandler.getPlayers();
@@ -68,7 +91,15 @@ public class PointsGameHandler {
 				players.get(i).points += payout;
 				players.get(i).state = 0;
 				players.get(i).investment = 0;
+			} else if(players.get(i).state == 3) { //shorting
+				int payout = SplitGame.getCost();
+				TwitchChat.outsidePM(players.get(i).name, "RIP run... You have to buy the stock back at the price of "
+						+ payout + " points for a result of " + (-payout - players.get(i).investment));
+				players.get(i).points -= payout;
+				players.get(i).state = 0;
+				players.get(i).investment = 0;
 			}
+
 		}
 
 		PlayersHandler.saveAll();
