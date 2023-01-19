@@ -62,7 +62,8 @@ public class TwitchChat extends PircBot {
 					+ "game with !join. Then you can buy with !buy, sell with "
 					+ "!sell and check your points with !points. You can whisper "
 					+ "https://www.twitch.tv/" +  AccountsManager.getBotName() + " "
-					+ "!help and/or !summary for more info.");
+					+ "!help and/or !summary for more info. "
+					+ "Credits to BeanSSBM for making this bot, all I've done is edit a few minor things.");
 		}
 		
 		if (message.equalsIgnoreCase("!join")) {

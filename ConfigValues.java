@@ -29,7 +29,7 @@ public class ConfigValues {
 		else {
 			stocksOn = true;
 			scoreMultiplier = 10.0;
-			dividendRate = 5.0;
+			dividendRate = 0.5; //for some reason it was 5.0 points per second before
 			chokeRate = 0.75;
 			cheekyEmotes = true;
 			writeValues();

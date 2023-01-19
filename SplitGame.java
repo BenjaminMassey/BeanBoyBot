@@ -42,7 +42,8 @@ public class SplitGame extends TimerTask {
 			if (checkReset()) {
 				cost = (int) Math.round(cost * 0.75);
 				PointsGameHandler.sellAll();
-				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
+				if(PlayersHandler.getPlayers().size() > 0) // prevent spam
+					TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
 				if (ConfigValues.cheekyEmotes)
 					StreamEmote.botEmote("RIPRUN", "FeelsBadMan");
 			}
@@ -83,7 +84,7 @@ public class SplitGame extends TimerTask {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
 		pbMessage = false;
-		ConfigValues.dividendRate = 0.5; // 0 means disabled
+		//ConfigValues.dividendRate = 0.5; // 0 means disabled (commented this line out, i wanted to change the dividend rate (too many points) but it wouldn't let me because of this line.
 		TimerTask splitStocks = new SplitGame();
 		TimeForPoints.start();
 		timer = new Timer(true);
@@ -124,8 +125,8 @@ public class SplitGame extends TimerTask {
 			{
 				String buffer = LiveSplitHandler.getPreviousSplitName();
 				
-				if(!ignoreSplits.contains(buffer)) // Check if this split is in the ignore list, if so dont reward Dividends
-					rewardDividends(newSplit);
+				if(!ignoreSplits.contains(buffer) || buffer.startsWith("-")) // Check if this split is in the ignore list, if so don't reward Dividends.
+					rewardDividends(newSplit);								 // Edited it to automatically ignore subsplits, so it doesn't reward dividends every 15 seconds for my runs -DNVIC.
 
 				if(chokeSplits.contains(buffer)) // Check if the previous split was a "choke split", if so reduce the "chokes" by 1
 					chokes--;
@@ -141,7 +142,8 @@ public class SplitGame extends TimerTask {
 		updateD();
 		if ((int) (Math.abs(d) * ConfigValues.dividendRate) > 0 && d < 0) { // Added check that delta is negative
 			dividend = (int) Math.ceil(Math.abs(d) * ConfigValues.dividendRate);
-			TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
+			if(PlayersHandler.getPlayers().size() > 0) // prevent spam
+				TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
 			PointsGameHandler.addDividendPoints(dividend, thisSplit); // Wrote new function that checks players.beginSplit
 		}
 	}
