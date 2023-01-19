@@ -9,8 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Array;
 import java.time.LocalDateTime;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class FileHandler {
 
@@ -29,6 +32,8 @@ public class FileHandler {
 		checkFileAndCreateIfNone("Output");
 		checkFileAndCreateIfNone("StreamMessage");
 		checkFileAndCreateIfNone("Config");
+		checkFileAndCreateIfNone("Chokes");
+		checkFileAndCreateIfNone("IgnoreSplits"); // This seems like a lot of files with the way I'm implementing Chokes and IgnoreSplits...
 	}
 	
 	private static void checkFileAndCreateIfNone(String filename) throws IOException {
@@ -88,6 +93,24 @@ public class FileHandler {
 			}
 		}
 		return line;
+	}
+
+	public static ArrayList<String> readEntireFile(String fileName) {
+		//Returns an entire file as an ArrayList of lines.
+
+		ArrayList<String> result = new ArrayList<String>();
+		try {
+			Scanner s = new Scanner(new File(fileName + ".txt"));
+			while(s.hasNextLine()) {
+				result.add(s.nextLine());
+			}
+			s.close();
+
+		} catch (Exception e) {
+			System.err.println("Error: " + e);
+		}
+
+		return result;
 	}
 
 	public static void deleteLineFromFile(String fileName, int lineNum) {

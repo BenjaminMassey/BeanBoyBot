@@ -24,8 +24,12 @@ public class SplitGame extends TimerTask {
 	private static boolean pbMessage; // Toggle for special PB message
 
 	private static int dividend; // Dividend value
+
+
+	private static int chokes; // number of chokes left in the run
 	
 	private static ArrayList<String> ignoreSplits; // Ignore splits of any name in this ArrayList for dividend rewards (useful specifically with Loading Splits in TTT)
+	private static ArrayList<String> chokeSplits;
 
 	public void run() {
 		if(ConfigValues.stocksOn) {
@@ -38,7 +42,8 @@ public class SplitGame extends TimerTask {
 			if (checkReset()) {
 				cost = (int) Math.round(cost * 0.75);
 				PointsGameHandler.sellAll();
-				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
+				if(PlayersHandler.getPlayers().size() > 0) // prevent spam
+					TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
 				if (ConfigValues.cheekyEmotes)
 					StreamEmote.botEmote("RIPRUN", "FeelsBadMan");
 			}
@@ -79,13 +84,15 @@ public class SplitGame extends TimerTask {
 		reset = true;
 		pb = -1; // Need to check before first update, but in order to check need a value
 		pbMessage = false;
-		ConfigValues.dividendRate = 0.5; // 0 means disabled
+		//ConfigValues.dividendRate = 0.5; // 0 means disabled (commented this line out, i wanted to change the dividend rate (too many points) but it wouldn't let me because of this line.
 		TimerTask splitStocks = new SplitGame();
 		TimeForPoints.start();
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(splitStocks, 0, 1000);
-		ignoreSplits = new ArrayList<String>(); // Make sure to leave this though
+		ignoreSplits = bbb.FileHandler.readEntireFile("IgnoreSplits");
 		ignoreSplits.add("-Loading"); // This is specifically for me right now, don't know if you can use it. If you can't simply remove this line
+		chokeSplits = bbb.FileHandler.readEntireFile("Chokes");
+		chokes = bbb.FileHandler.getFileLength("Chokes");
 	}
 
 	public static void stop() {
@@ -118,8 +125,11 @@ public class SplitGame extends TimerTask {
 			{
 				String buffer = LiveSplitHandler.getPreviousSplitName();
 				
-				if(!ignoreSplits.contains(buffer)) // Check if this split is in the ignore list, if so dont reward Dividends
-					rewardDividends(newSplit);
+				if(!(ignoreSplits.contains(buffer) || buffer.startsWith("-"))) // Check if this split is in the ignore list, if so don't reward Dividends.
+					rewardDividends(newSplit);								 // Edited it to automatically ignore subsplits, so it doesn't reward dividends every 15 seconds for my runs -DNVIC.
+
+				if(chokeSplits.contains(buffer)) // Check if the previous split was a "choke split", if so reduce the "chokes" by 1
+					chokes--;
 			}
 			PlayersHandler.setBeginSplit(newSplit); // Update the begin split if you are invested at this point in time
 			System.out.println("New Split");
@@ -132,7 +142,8 @@ public class SplitGame extends TimerTask {
 		updateD();
 		if ((int) (Math.abs(d) * ConfigValues.dividendRate) > 0 && d < 0) { // Added check that delta is negative
 			dividend = (int) Math.ceil(Math.abs(d) * ConfigValues.dividendRate);
-			TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
+			if(PlayersHandler.getPlayers().size() > 0) // prevent spam
+				TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
 			PointsGameHandler.addDividendPoints(dividend, thisSplit); // Wrote new function that checks players.beginSplit
 		}
 	}
@@ -206,8 +217,8 @@ public class SplitGame extends TimerTask {
 	}
 
 	private static void setCost() {
-		if (!LiveSplitHandler.getCurrentTimerPhase().equals("Ended")) { // Fix for calculating a high cost even if u finish a run poorly
-			cost = (int) Math.round(v * ConfigValues.scoreMultiplier);
+		if (!LiveSplitHandler.getCurrentTimerPhase().equals("Ended")) { // Fix for calculating a high cost even if you finish a run poorly
+			cost = (int) Math.round(v * ConfigValues.scoreMultiplier * Math.pow(ConfigValues.chokeRate, chokes));
 		}
 	}
 
@@ -283,7 +294,7 @@ public class SplitGame extends TimerTask {
 			else if (timeStrArray.length == 2) { // XX:XX.XX
 				time = (Math.abs(Double.parseDouble(timeStrArray[0])) * 60) + Math.abs(Double.parseDouble(timeStrArray[1]));
 			} else if(timeStrArray.length == 3){ // X:XX:XX.XX Why not add this I figure .. might be important down the line
-				time = (Math.abs(Double.parseDouble(timeStrArray[0])) * 360) + (Math.abs(Double.parseDouble(timeStrArray[1])) * 60) + Math.abs(Double.parseDouble(timeStrArray[2]));
+				time = (Math.abs(Double.parseDouble(timeStrArray[0])) * 3600) + (Math.abs(Double.parseDouble(timeStrArray[1])) * 60) + Math.abs(Double.parseDouble(timeStrArray[2]));
 			} else {
 				time = 0;
 				System.err.println("DID NOT PARSE '" + givenTime + "' CORRECTLY");

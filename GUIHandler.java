@@ -115,7 +115,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(20,1));
+		jp.setLayout(new GridLayout(22,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -213,7 +213,7 @@ public class GUIHandler extends JFrame {
         scoreMultiplier.setText(Double.toString(ConfigValues.scoreMultiplier));
         jp.add(scoreMultiplier);
         // Button to confirm score multiplier
-        JButton scoreMultiplierConfirm = new JButton("Set Multiplier");
+        JButton scoreMultiplierConfirm = new JButton("Set Score Multiplier");
         jp.add(scoreMultiplierConfirm);
         scoreMultiplierConfirm.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
@@ -227,7 +227,7 @@ public class GUIHandler extends JFrame {
         diviMultiplier.setText(Double.toString(ConfigValues.dividendRate));
         jp.add(diviMultiplier);
         // Button to confirm dividend multiplier
-        JButton diviMultiplierConfirm = new JButton("Set Multiplier");
+        JButton diviMultiplierConfirm = new JButton("Set Dividend Multiplier");
         jp.add(diviMultiplierConfirm);
         diviMultiplierConfirm.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
@@ -235,12 +235,26 @@ public class GUIHandler extends JFrame {
         		ConfigValues.writeValues();
         	}
         });
+
+		// Entry to set the choke multiplier
+		JTextField chokeMultiplier = new JTextField(20);
+		chokeMultiplier.setText(Double.toString(ConfigValues.chokeRate));
+		jp.add(chokeMultiplier);
+		// Button to confirm dividend multiplier
+		JButton chokeMultiplierConfirm = new JButton("Set Choke Multiplier");
+		jp.add(chokeMultiplierConfirm);
+		chokeMultiplierConfirm.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				ConfigValues.chokeRate = Double.parseDouble(chokeMultiplier.getText());
+				ConfigValues.writeValues();
+			}
+		});
         
         // Blank space for spacing
         blank = new JLabel("");
         jp.add(blank);
         
-        JButton denyButton = new JButton("Deny quequed item");
+        JButton denyButton = new JButton("Deny queued item");
         jp.add(denyButton);
         denyButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {

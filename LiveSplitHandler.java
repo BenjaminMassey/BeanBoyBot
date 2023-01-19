@@ -92,7 +92,7 @@ public class LiveSplitHandler {
 	public static String getFinalTime() {
 		// Get the final time
 
-		return receive("getfinaltime");
+		return receive("getfinaltime Personal Best");
 	}
 
 	public static String getLastSplitTime() {
