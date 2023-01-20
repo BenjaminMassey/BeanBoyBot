@@ -129,4 +129,17 @@ public class PointsGameHandler {
 		PlayersHandler.saveAll();
 	}
 
+	public static void addGoldPayout() {
+		ArrayList<Player> players = PlayersHandler.getPlayers();
+
+		for(int i = 0; i < players.size(); i++) {
+
+			if(players.get(i).state == 1) // check if bought at all. mid-split shouldnt matter for this, as its hard to tell (if you have good splits) if a split will be a gold until right before you split.
+			{
+				players.get(i).points += ConfigValues.goldPayout;
+				TwitchChat.outsidePM(players.get(i).name, "GOOOOOOOOOOOOOLD!!!! Enjoy a payout of " + ConfigValues.goldPayout + " points!");
+			}
+		}
+	}
+
 }

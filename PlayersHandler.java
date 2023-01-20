@@ -68,7 +68,15 @@ public class PlayersHandler {
 		} else
 			return false;
 	}
-
+	public static int getNumActivePlayers() {
+		int numActivePlayers = 0;
+		for(int i = 0; i < players.size(); i++) {
+			if(players.get(i).state != 0) {
+				numActivePlayers++;
+			}
+		}
+		return numActivePlayers;
+	}
 	public static void saveAll() {
 
 		try {

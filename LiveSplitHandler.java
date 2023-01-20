@@ -72,9 +72,13 @@ public class LiveSplitHandler {
 	}
 
 	public static String getDelta() {
-		// Get the current delta with current comparison
+		// Get the current delta for PB (changed because I switch between comparisons sometimes, but still want the bot to be only on PB.)
 
-		return receive("getdelta");
+		return receive("getdelta Personal Best");
+	}
+
+	public static String getBestDelta() {
+		return receive("getdelta Best Segments");
 	}
 
 	public static String getSplitIndex() {

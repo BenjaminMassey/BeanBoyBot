@@ -16,6 +16,7 @@ public class SplitGame extends TimerTask {
 	private static double ct; // Current Time in seconds
 	private static double pd; // Percent Done with the run in seconds
 	private static double d; // Delta in seconds
+	private static double bd; // delta for best segments in seconds
 	private static double pb; // Personal Best in seconds
 	private static double v; // The calculated value from 0 to 1 of the run
 
@@ -38,18 +39,24 @@ public class SplitGame extends TimerTask {
 			updateCT();
 			updatePD();
 			updateD();
+			updateBD();
 			generateValue();
 			if (checkReset()) {
 				cost = (int) Math.round(cost * 0.75);
 				PointsGameHandler.sellAll();
-				if(PlayersHandler.getPlayers().size() > 0) // prevent spam
+				chokes = bbb.FileHandler.getFileLength("Chokes");
+				bd = 0; //dont want first split to always be a "gold"
+				if(PlayersHandler.getNumActivePlayers() > 0) // prevent spam
 					TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a reset (spoilers)");
 				if (ConfigValues.cheekyEmotes)
 					StreamEmote.botEmote("RIPRUN", "FeelsBadMan");
+
 			}
 			if (checkPB()) {
 				cost = (int) Math.round(cost * 2);
 				PointsGameHandler.sellAll();
+				chokes = bbb.FileHandler.getFileLength("Chokes");
+				bd = 0; //dont want first split to always be a "gold"
 				TwitchChat.outsideMessage("Sold out everyone at " + cost + " for a PB (spoilers)");
 				pbMessage = true;
 				if (ConfigValues.cheekyEmotes)
@@ -128,6 +135,7 @@ public class SplitGame extends TimerTask {
 				if(!(ignoreSplits.contains(buffer) || buffer.startsWith("-"))) // Check if this split is in the ignore list, if so don't reward Dividends.
 					rewardDividends(newSplit);								 // Edited it to automatically ignore subsplits, so it doesn't reward dividends every 15 seconds for my runs -DNVIC.
 
+				rewardGolds(newSplit);
 				if(chokeSplits.contains(buffer)) // Check if the previous split was a "choke split", if so reduce the "chokes" by 1
 					chokes--;
 			}
@@ -142,9 +150,18 @@ public class SplitGame extends TimerTask {
 		updateD();
 		if ((int) (Math.abs(d) * ConfigValues.dividendRate) > 0 && d < 0) { // Added check that delta is negative
 			dividend = (int) Math.ceil(Math.abs(d) * ConfigValues.dividendRate);
-			if(PlayersHandler.getPlayers().size() > 0) // prevent spam
+			if(PlayersHandler.getNumActivePlayers() > 0) // prevent spam
 				TwitchChat.outsideMessage("PB Pace! Dividends pay " + dividend + " points to everyone who was invested at the start of this split.");
 			PointsGameHandler.addDividendPoints(dividend, thisSplit); // Wrote new function that checks players.beginSplit
+		}
+	}
+
+	private static void rewardGolds(int thisSplit) {;
+		double prevbd = bd;
+		updateBD();
+		if (bd < prevbd) {
+			TwitchChat.outsideMessage("New Gold! The generosity of the run has given everyone invested " + ConfigValues.goldPayout + " points!"); //no spam prevention because golds are rare
+			PointsGameHandler.addGoldPayout();
 		}
 	}
 	
@@ -188,6 +205,17 @@ public class SplitGame extends TimerTask {
 				buffer = buffer.replaceAll("−", "-");
 			d = stringTimeToSeconds(buffer);
 			
+			//System.out.println("Delta - String: " + buffer + " num: " + d);
+		}
+	}
+	private static void updateBD() {
+		// Have to handle some weird stuff here
+		if (LiveSplitHandler.getCurrentTimerPhase().equals("Running")) {
+			String buffer = LiveSplitHandler.getBestDelta();
+			if (buffer.contains("−"))
+				buffer = buffer.replaceAll("−", "-");
+			bd = stringTimeToSeconds(buffer);
+
 			//System.out.println("Delta - String: " + buffer + " num: " + d);
 		}
 	}
