@@ -11,7 +11,7 @@ public class PlayersHandler {
 	public static class Player {
 		public String name;
 		public int points;
-		public int state; // 0 - not invested, 1 - invested, 2 - waiting to sell
+		public int state; // 0 - not invested, 1 - invested, 2 - waiting to sell, 3 - shorting a stock
 		public int investment; // amount invested
 		public int beginSplit; // The split in which this player was invested when the split began. To be updated at each split.
 	}
@@ -68,7 +68,15 @@ public class PlayersHandler {
 		} else
 			return false;
 	}
-
+	public static int getNumActivePlayers() {
+		int numActivePlayers = 0;
+		for(int i = 0; i < players.size(); i++) {
+			if(players.get(i).state != 0) {
+				numActivePlayers++;
+			}
+		}
+		return numActivePlayers;
+	}
 	public static void saveAll() {
 
 		try {

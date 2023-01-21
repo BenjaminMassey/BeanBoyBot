@@ -60,7 +60,7 @@ public class ServerUpdate implements Runnable{
         try {
             ssh.newSCPFileTransfer().upload(new FileSystemFile(filename), "/home/ben/Desktop/SpeedrunStocksServer");
         } catch (Exception e) {
-            System.err.println("ServerUpdate.updateFile(1) error : " + e.toString());
+            //System.err.println("ServerUpdate.updateFile(1) error : " + e.toString()); this seems like a thing specifically for bean and its clogging up my console
         }
     }
 

@@ -114,6 +114,23 @@ public class TwitchChat extends PircBot {
 				}
 			}
 		}
+
+		if (message.equalsIgnoreCase("!short") && ConfigValues.stocksOn) {
+			boolean shorted = PointsGameHandler.shortRun(sender);
+			if (shorted)
+				privateMessage(sender, "Thanks for shorting, " + sender + "! It gave you " + SplitGame.getCost()
+						+ " points. You now have " + PlayersHandler.getPoints(sender) + " points. You will need to buy back, eventually, though.");
+			else {
+				if(!PlayersHandler.playing(sender))
+					messageChat(sender + ", first you gotta !join.");
+				else {
+					if(PlayersHandler.getState(sender) == 1)
+						privateMessage(sender, sender + ", first you need to !sell your current stock in order to short.");
+					else
+						privateMessage(sender, "Sorry, " + sender + ", but failed to short... D:");
+				}
+			}
+		}
 		
 		if (message.equalsIgnoreCase("!points")) {
 			if(!PlayersHandler.playing(sender))
@@ -121,6 +138,13 @@ public class TwitchChat extends PircBot {
 			else
 				messageChat(sender + " has " + PlayersHandler.getPoints(sender) + 
 						" points (Rank #" + PlayersHandler.getPlacement(sender) + ")");
+		}
+
+		if(message.equalsIgnoreCase(("!shorthelp"))) {
+			messageChat("Implementing a brand new \"short\" system. Basically, when you 'sell' a short, you're betting the run will fail. If you type !short, you sell a stock. " +
+						"You get all the points immediately, but you owe the system a stock, and will have to buy it back later. If the run resets, and you have a short, you " +
+						"will automatically buy back the stock at the reset value (0.75x normal price). Otherwise, you can use !buy to buy back the short. If you want to buy " +
+						"a normal stock after shorting a stock, you need to type !buy twice.");
 		}
 	}
 	
@@ -134,6 +158,12 @@ public class TwitchChat extends PircBot {
 						+ "!summary. To view all of the commands, message me !commands. Only "
 						+ "!buy, !sell and !points will work in the main chat - everything "
 						+ "else must be done through whsipers.");
+			}
+			if(message.equalsIgnoreCase(("!shorthelp"))) {
+				messageChat("Implementing a brand new \"short\" system. Basically, when you 'sell' a short, you're betting the run will fail. If you type !short, you sell a stock. " +
+						"You get all the points immediately, but you owe the system a stock, and will have to buy it back later. If the run resets, and you have a short, you " +
+						"will automatically buy back the stock at the reset value (0.75x normal price). Otherwise, you can use !buy to buy back the short. If you want to buy " +
+						"a normal stock after shorting a stock, you need to type !buy twice.");
 			}
 			
 			if (message.equalsIgnoreCase("!summary")) {
@@ -204,6 +234,23 @@ public class TwitchChat extends PircBot {
 							privateMessage(sender, sender + ", first you need to !buy");
 						else
 							privateMessage(sender, "Sorry, " + sender + ", but failed to sell... D:");
+					}
+				}
+			}
+
+			if (message.equalsIgnoreCase("!short") && ConfigValues.stocksOn) {
+				boolean shorted = PointsGameHandler.shortRun(sender);
+				if (shorted)
+					privateMessage(sender, "Thanks for shorting, " + sender + "! It gave you " + SplitGame.getCost()
+							+ " points. You now have " + PlayersHandler.getPoints(sender) + " points. You will need to buy back, eventually, though.");
+				else {
+					if(!PlayersHandler.playing(sender))
+						messageChat(sender + ", first you gotta !join.");
+					else {
+						if(PlayersHandler.getState(sender) == 1)
+							privateMessage(sender, sender + ", first you need to !sell your current stock in order to short.");
+						else
+							privateMessage(sender, "Sorry, " + sender + ", but failed to short... D:");
 					}
 				}
 			}
