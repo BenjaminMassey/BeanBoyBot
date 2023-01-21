@@ -10,7 +10,6 @@ public class Program {
 	// Main program to be run that will call the Twitch Bot itself
 
 	public static void main(String[] args) throws IOException {
-
 		FileHandler.checkForFilesAndCreateIfNone();
 		PlayersHandler.initialize();
 		AccountsManager.updateAll();

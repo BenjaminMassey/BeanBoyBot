@@ -43,7 +43,7 @@ public class TwitchChat extends PircBot {
 		new Thread(new StreamEmote()).start();
 		new Thread(new StreamImage()).start();
 		new Thread(new TimeForPoints()).start();
-		new Thread(new ServerUpdate()).start();
+		//new Thread(new ServerUpdate()).start();
 	}
 
 	public static void deactivate() throws IOException, IrcException {

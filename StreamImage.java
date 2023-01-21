@@ -18,8 +18,8 @@ public class StreamImage implements Runnable{
 	
 	public void run() {
 		while(TwitchChat.connected) {
-			if(images.size() > 0 && GUIHandler.approval) {
-				GUIHandler.approval = false;
+			if(images.size() > 0 && GUIHandler.imageApproval) {
+				GUIHandler.imageApproval = false;
 				String urlStr = images.get(0);
 				images.remove(0);
 				StreamMessage.playSound();
@@ -58,7 +58,7 @@ public class StreamImage implements Runnable{
 				PlayersHandler.removePoints(user, cost);
 				System.out.println("Attempted image from " + user + " with " + message.substring(10));
 				images.add(message.substring(10));
-				TwitchChat.outsideMessage(user + " added " + message.substring(10));
+				TwitchChat.outsideMessage(user + " queued image " + message.substring(10));
 				TwitchChat.outsidePM(user, "Your image has been added "+
 							"to the queue, " + user + ".");
 			}

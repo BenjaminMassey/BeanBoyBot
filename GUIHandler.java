@@ -19,8 +19,9 @@ public class GUIHandler extends JFrame {
 	private static JButton startButtonConfig;
 	private static JButton startButtonNonConfig;
 	
-	public static boolean approval = false;
-	
+	public static boolean imageApproval = false;
+	public static boolean messageApproval = false;
+
 	public static void createWindow(String name, String icon) {
 		// Create and set up the window
         frame = new GUIHandler(name);
@@ -30,7 +31,7 @@ public class GUIHandler extends JFrame {
         frame.setIconImage(ico.getImage());
         frame.pack();
         frame.setVisible(true);
-        frame.setSize(250,225);
+        frame.setSize(250,275);
 	}
 	
 	public GUIHandler(String name) {
@@ -115,7 +116,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(22,1));
+		jp.setLayout(new GridLayout(24,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -127,7 +128,7 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,225);
+        		frame.setSize(250,275);
         	}
         });
 		
@@ -253,26 +254,42 @@ public class GUIHandler extends JFrame {
         // Blank space for spacing
         blank = new JLabel("");
         jp.add(blank);
-        
-        JButton denyButton = new JButton("Deny queued item");
-        jp.add(denyButton);
-        denyButton.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent ae) {
-        		if (StreamImage.images.size() > 0)
-        			StreamImage.images.remove(0);
-        		if (StreamMessage.messages.size() > 0)
-        			StreamMessage.messages.remove(0);
-        	}
-        });
-        
-        JButton approvalButton = new JButton("Approve quequed item");
-        jp.add(approvalButton);
-        approvalButton.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent ae) {
-        		if (StreamImage.images.size() > 0)
-        			approval = true;
-        	}
-        });
+
+		JButton denyImageButton = new JButton("Deny quequed image");
+		jp.add(denyImageButton);
+		denyImageButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				if (StreamImage.images.size() > 0)
+					StreamImage.images.remove(0);
+			}
+		});
+
+		JButton imageApprovalButton = new JButton("Approve quequed image");
+		jp.add(imageApprovalButton);
+		imageApprovalButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				if (StreamImage.images.size() > 0)
+					imageApproval = true;
+			}
+		});
+
+		JButton denyMessageButton = new JButton("Deny quequed message");
+		jp.add(denyMessageButton);
+		denyMessageButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				if (StreamMessage.messages.size() > 0)
+					StreamMessage.messages.remove(0);
+			}
+		});
+
+		JButton messageApprovalButton = new JButton("Approve quequed message");
+		jp.add(messageApprovalButton);
+		messageApprovalButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				if (StreamMessage.messages.size() > 0)
+					messageApproval = true;
+			}
+		});
         
         // Blank space for spacing
         blank = new JLabel("");
@@ -289,7 +306,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateNonConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(7,1));
+		jp.setLayout(new GridLayout(9,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -301,31 +318,47 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,550);
+        		frame.setSize(250,625);
         	}
         });
-        
+
         // Blank space for spacing
         JLabel blank = new JLabel("");
         jp.add(blank);
-        
-        JButton denyButton = new JButton("Deny quequed item");
-        jp.add(denyButton);
-        denyButton.addActionListener(new ActionListener(){
+
+        JButton denyImageButton = new JButton("Deny quequed image");
+        jp.add(denyImageButton);
+		denyImageButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
         		if (StreamImage.images.size() > 0)
         			StreamImage.images.remove(0);
-        		if (StreamMessage.messages.size() > 0)
-        			StreamMessage.messages.remove(0);
         	}
         });
         
-        JButton approvalButton = new JButton("Approve quequed item");
-        jp.add(approvalButton);
-        approvalButton.addActionListener(new ActionListener(){
+        JButton imageApprovalButton = new JButton("Approve quequed image");
+        jp.add(imageApprovalButton);
+		imageApprovalButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae) {
         		if (StreamImage.images.size() > 0)
-        			approval = true;
+        			imageApproval = true;
+        	}
+        });
+
+		JButton denyMessageButton = new JButton("Deny quequed message");
+		jp.add(denyMessageButton);
+		denyMessageButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				if (StreamMessage.messages.size() > 0)
+					StreamMessage.messages.remove(0);
+			}
+		});
+
+        JButton messageApprovalButton = new JButton("Approve quequed message");
+        jp.add(messageApprovalButton);
+		messageApprovalButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+        		if (StreamMessage.messages.size() > 0)
+        			messageApproval = true;
         	}
         });
         

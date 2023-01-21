@@ -13,8 +13,8 @@ public class StreamMessage implements Runnable{
 	
 	public void run() {
 		while(TwitchChat.connected) {
-			if(messages.size() > 0 && GUIHandler.approval) {
-				GUIHandler.approval = false;
+			if(messages.size() > 0 && GUIHandler.messageApproval) {
+				GUIHandler.messageApproval = false;
 				String message = messages.get(0);
 				messages.remove(0);
 				playSound();
@@ -41,7 +41,7 @@ public class StreamMessage implements Runnable{
 			if(message.length() <= 292) {
 				PlayersHandler.removePoints(user, 1000);
 				messages.add(user + ": " + message.substring(12));
-				TwitchChat.outsideMessage(user + " displayed the message: \"" + 
+				TwitchChat.outsideMessage(user + " queued the message: \"" +
 						message.substring(12) + "\" to the screen.");
 				TwitchChat.outsidePM(user, "Thanks for buying a message for 1000 points!");
 			}

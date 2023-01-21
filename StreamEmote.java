@@ -25,7 +25,7 @@ public class StreamEmote implements Runnable{
 					String emoteName = pieces[1];
 					System.out.println("Copying " + "emotes/" + emoteName + ".png" +
 							" to " + "emotes/current.png");
-					
+
 					Path source = Paths.get("emotes/" + emoteName + ".png");
 					Path target = Paths.get("emotes/current.png");
 					Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
