@@ -8,7 +8,7 @@ import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.xfer.FileSystemFile;
-import org.apache.log4j.BasicConfigurator;
+//import org.apache.log4j.BasicConfigurator; // TODO
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class ServerUpdate implements Runnable{
 
     private static void connectSSH() {
         try {
-            BasicConfigurator.configure();
+            //BasicConfigurator.configure(); // TODO
             ssh = new SSHClient();
             ssh.addHostKeyVerifier(new PromiscuousVerifier());
             ssh.connect("local.speedrunstocks.com", 22);
