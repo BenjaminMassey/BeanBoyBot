@@ -2,11 +2,14 @@ package bbb;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
+import java.awt.Desktop;
 import javax.imageio.ImageIO;
 
 public class StreamImage implements Runnable{
@@ -38,6 +41,19 @@ public class StreamImage implements Runnable{
 					System.err.println(e);
 					if (dirPath != null)
 						System.err.println(dirPath);
+				}
+			}
+			else if(images.size() > 0 && GUIHandler.previewImage) {
+				GUIHandler.previewImage = false;
+				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+					String urlStr = images.get(0);
+					try {
+						Desktop.getDesktop().browse(new URI(urlStr));
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					} catch (URISyntaxException e) {
+						throw new RuntimeException(e);
+					}
 				}
 			}
 			else {

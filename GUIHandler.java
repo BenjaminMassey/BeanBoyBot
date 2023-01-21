@@ -22,6 +22,8 @@ public class GUIHandler extends JFrame {
 	public static boolean imageApproval = false;
 	public static boolean messageApproval = false;
 
+	public static boolean previewImage = false;
+
 	public static void createWindow(String name, String icon) {
 		// Create and set up the window
         frame = new GUIHandler(name);
@@ -116,7 +118,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(25,1));
+		jp.setLayout(new GridLayout(26,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -258,6 +260,14 @@ public class GUIHandler extends JFrame {
         blank = new JLabel("");
         jp.add(blank);
 
+		JButton previewImageButton = new JButton("Preview quequed image");
+		jp.add(previewImageButton);
+		previewImageButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				previewImage = true;
+			}
+		});
+
 		JButton denyImageButton = new JButton("Deny quequed image");
 		jp.add(denyImageButton);
 		denyImageButton.addActionListener(new ActionListener(){
@@ -309,7 +319,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateNonConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(9,1));
+		jp.setLayout(new GridLayout(10,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -328,6 +338,14 @@ public class GUIHandler extends JFrame {
         // Blank space for spacing
         JLabel blank = new JLabel("");
         jp.add(blank);
+
+        JButton previewImageButton = new JButton("Preview quequed image");
+        jp.add(previewImageButton);
+		previewImageButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent ae) {
+				previewImage = true;
+        	}
+        });
 
         JButton denyImageButton = new JButton("Deny quequed image");
         jp.add(denyImageButton);
