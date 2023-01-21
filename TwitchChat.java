@@ -115,7 +115,7 @@ public class TwitchChat extends PircBot {
 			}
 		}
 
-		if (message.equalsIgnoreCase("!short") && ConfigValues.stocksOn) {
+		if (message.equalsIgnoreCase("!short") && ConfigValues.stocksOn && ConfigValues.shortingOn) {
 			boolean shorted = PointsGameHandler.shortRun(sender);
 			if (shorted)
 				privateMessage(sender, "Thanks for shorting, " + sender + "! It gave you " + SplitGame.getCost()
@@ -238,7 +238,7 @@ public class TwitchChat extends PircBot {
 				}
 			}
 
-			if (message.equalsIgnoreCase("!short") && ConfigValues.stocksOn) {
+			if (message.equalsIgnoreCase("!short") && ConfigValues.stocksOn && ConfigValues.shortingOn) {
 				boolean shorted = PointsGameHandler.shortRun(sender);
 				if (shorted)
 					privateMessage(sender, "Thanks for shorting, " + sender + "! It gave you " + SplitGame.getCost()

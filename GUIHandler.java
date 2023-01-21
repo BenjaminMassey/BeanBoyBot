@@ -116,7 +116,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(24,1));
+		jp.setLayout(new GridLayout(25,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -178,36 +178,39 @@ public class GUIHandler extends JFrame {
         // Blank space for spacing
         JLabel blank = new JLabel("");
         jp.add(blank);
-        
+
         // Checkbox for toggling stock game
         JCheckBox stocks = new JCheckBox("Stock Game On");
         stocks.setSelected(ConfigValues.stocksOn);
         jp.add(stocks);
         stocks.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-		            ConfigValues.stocksOn = true;
-		        } else {
-		            ConfigValues.stocksOn = false;
-		        }
+				ConfigValues.stocksOn = e.getStateChange() == ItemEvent.SELECTED;
 				ConfigValues.writeValues();
 			}
         });
         
-     // Checkbox for toggling cheeky emotes
+     	// Checkbox for toggling cheeky emotes
         JCheckBox cemotes = new JCheckBox("Cheeky Emotes On");
         cemotes.setSelected(ConfigValues.cheekyEmotes);
         jp.add(cemotes);
         cemotes.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-		            ConfigValues.cheekyEmotes = true;
-		        } else {
-		            ConfigValues.cheekyEmotes = false;
-		        }
+				ConfigValues.cheekyEmotes = e.getStateChange() == ItemEvent.SELECTED;
 				ConfigValues.writeValues();
 			}
         });
+
+		// Checkbox for toggling stock game
+		JCheckBox shorts = new JCheckBox("Shorting Enabled");
+		shorts.setSelected(ConfigValues.shortingOn);
+		jp.add(shorts);
+		shorts.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				ConfigValues.shortingOn = e.getStateChange() == ItemEvent.SELECTED;
+				ConfigValues.writeValues();
+			}
+		});
         
         // Entry to set the score multiplier
         JTextField scoreMultiplier = new JTextField(20);
@@ -318,7 +321,7 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,625);
+        		frame.setSize(250,675);
         	}
         });
 

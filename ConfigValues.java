@@ -15,6 +15,8 @@ public class ConfigValues {
 	public static int goldPayout;
 	public static double resetPayout;
 	public static double pbPayout;
+
+	public static boolean shortingOn;
 	
 	public static void writeValues() {
 		FileHandler.writeToFile("Config", "StocksOn:" + Boolean.toString(stocksOn) + FileHandler.nl
@@ -23,12 +25,13 @@ public class ConfigValues {
 								+ "CheekyEmotes:" + Boolean.toString(cheekyEmotes) + FileHandler.nl
 								+ "ChokeRate:" + Double.toString(chokeRate) + FileHandler.nl
 								+ "GoldPayout:" + Integer.toString(goldPayout) + FileHandler.nl   //Gold PB and Reset Payout are all in the config file, but not in the GUI.
-								+ "PBPayout:" + Double.toString(pbPayout) +FileHandler.nl 		  // This is a decision by me to avoid clutter, since I don't think people
-								+ "ResetPayout:" + Double.toString(resetPayout) +FileHandler.nl); // will edit them that much, but I still think they should be editable.
+								+ "PBPayout:" + Double.toString(pbPayout) + FileHandler.nl 		  // This is a decision by me to avoid clutter, since I don't think people
+								+ "ResetPayout:" + Double.toString(resetPayout) + FileHandler.nl // will edit them that much, but I still think they should be editable.
+								+ "ShortingOn:" + Boolean.toString(shortingOn) + FileHandler.nl); // will edit them that much, but I still think they should be editable.
 	}
 	
 	public static void getValues() {
-		if(FileHandler.getFileLength("Config") > 7) {
+		if(FileHandler.getFileLength("Config") > 8) {
 			stocksOn = Boolean.parseBoolean(FileHandler.readFromFile("Config", 0).split(":")[1]);
 			scoreMultiplier = Double.parseDouble(FileHandler.readFromFile("Config", 1).split(":")[1]);
 			dividendRate = Double.parseDouble(FileHandler.readFromFile("Config", 2).split(":")[1]);
@@ -37,6 +40,7 @@ public class ConfigValues {
 			goldPayout = Integer.parseInt(FileHandler.readFromFile("Config", 5).split(":")[1]);
 			pbPayout = Double.parseDouble(FileHandler.readFromFile("Config", 6).split(":")[1]);
 			resetPayout = Double.parseDouble(FileHandler.readFromFile("Config", 7).split(":")[1]);
+			shortingOn = Boolean.parseBoolean(FileHandler.readFromFile("Config", 8).split(":")[1]);
 		}
 		else {
 			stocksOn = true;
@@ -47,6 +51,7 @@ public class ConfigValues {
 			pbPayout = 2.0;
 			resetPayout = 0.75;
 			cheekyEmotes = true;
+			shortingOn = true;
 			writeValues();
 		}
 	}
