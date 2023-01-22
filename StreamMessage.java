@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.*;
 
 public class StreamMessage implements Runnable{
 	
@@ -25,6 +26,11 @@ public class StreamMessage implements Runnable{
 					e.printStackTrace();
 				}
 				FileHandler.writeToFile("StreamMessage", "");
+			}
+			else if (messages.size() > 0 && GUIHandler.previewMessage) {
+				GUIHandler.previewMessage = false;
+				String message = messages.get(0);
+				JOptionPane.showMessageDialog(null, message);
 			}
 			else {
 				try {

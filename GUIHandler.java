@@ -23,6 +23,7 @@ public class GUIHandler extends JFrame {
 	public static boolean messageApproval = false;
 
 	public static boolean previewImage = false;
+	public static boolean previewMessage = false;
 
 	public static void createWindow(String name, String icon) {
 		// Create and set up the window
@@ -33,7 +34,7 @@ public class GUIHandler extends JFrame {
         frame.setIconImage(ico.getImage());
         frame.pack();
         frame.setVisible(true);
-        frame.setSize(250,275);
+        frame.setSize(250,300);
 	}
 	
 	public GUIHandler(String name) {
@@ -118,7 +119,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(26,1));
+		jp.setLayout(new GridLayout(27,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -130,7 +131,7 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,275);
+        		frame.setSize(250,300);
         	}
         });
 		
@@ -286,6 +287,14 @@ public class GUIHandler extends JFrame {
 			}
 		});
 
+		JButton previewMessageButton = new JButton("Preview quequed message");
+		jp.add(previewMessageButton);
+		previewMessageButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				previewMessage = true;
+			}
+		});
+
 		JButton denyMessageButton = new JButton("Deny quequed message");
 		jp.add(denyMessageButton);
 		denyMessageButton.addActionListener(new ActionListener(){
@@ -319,7 +328,7 @@ public class GUIHandler extends JFrame {
 	private static JPanel generateNonConfigPanel() {
 		
 		JPanel jp = new JPanel();
-		jp.setLayout(new GridLayout(10,1));
+		jp.setLayout(new GridLayout(11,1));
         
         // Put on a title label
         jp.add(new JLabel("                BeanBoyBot Twitch Bot                ", SwingConstants.CENTER));
@@ -331,7 +340,7 @@ public class GUIHandler extends JFrame {
         	public void actionPerformed(ActionEvent ae) {
         		CardLayout cl = (CardLayout) main.getLayout();
         		cl.next(main);
-        		frame.setSize(250,675);
+        		frame.setSize(250,700);
         	}
         });
 
@@ -364,6 +373,14 @@ public class GUIHandler extends JFrame {
         			imageApproval = true;
         	}
         });
+
+		JButton previewMessageButton = new JButton("Preview quequed message");
+		jp.add(previewMessageButton);
+		previewMessageButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				previewMessage = true;
+			}
+		});
 
 		JButton denyMessageButton = new JButton("Deny quequed message");
 		jp.add(denyMessageButton);
