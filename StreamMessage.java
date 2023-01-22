@@ -47,9 +47,8 @@ public class StreamMessage implements Runnable{
 			if(message.length() <= 292) {
 				PlayersHandler.removePoints(user, 1000);
 				messages.add(user + ": " + message.substring(12));
-				TwitchChat.outsideMessage(user + " queued the message: \"" +
-						message.substring(12) + "\" to the screen.");
-				TwitchChat.outsidePM(user, "Thanks for buying a message for 1000 points!");
+				TwitchChat.outsideMessage(user + " queued a message to the screen.");
+				TwitchChat.outsidePM(user, "Your message has been added to the queue.");
 			}
 			else {
 				TwitchChat.outsidePM(user, "Sorry, " + user + ", but there "+

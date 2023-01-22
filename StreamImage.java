@@ -74,7 +74,7 @@ public class StreamImage implements Runnable{
 				PlayersHandler.removePoints(user, cost);
 				System.out.println("Attempted image from " + user + " with " + message.substring(10));
 				images.add(message.substring(10));
-				TwitchChat.outsideMessage(user + " queued image " + message.substring(10));
+				TwitchChat.outsideMessage(user + " queued an image to the screen.");
 				TwitchChat.outsidePM(user, "Your image has been added "+
 							"to the queue, " + user + ".");
 			}
